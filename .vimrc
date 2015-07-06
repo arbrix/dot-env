@@ -1,5 +1,42 @@
-" Vundle {{{
 set nocompatible              " be iMproved, required
+" Backups and swapfile
+set backup
+set backupdir=$HOME/.vim/backup/
+silent execute '!mkdir -p $HOME/.vim/backup'
+
+syntax on
+set vb
+set noswapfile
+
+if version >= 703
+	set conceallevel=1
+	set concealcursor=nc
+	set colorcolumn=+1
+	set cinoptions+=L0
+	"set undofile
+	set undodir=~/.vim/undofiles
+	if !isdirectory(&undodir)
+		call mkdir(&undodir, "p")
+	endif
+	map  <C-ScrollWheelDown> <ScrollWheelRight>
+	map  <C-ScrollWheelUp>   <ScrollWheelLeft>
+	imap <C-ScrollWheelDown> <ScrollWheelRight>
+	imap <C-ScrollWheelUp>   <ScrollWheelLeft>
+endif
+
+
+" Status Line
+set laststatus=2
+"set statusline=%<%f\ %m%=\ %h%r\ %-19([%p%%]\ %3l,%02c%03V%)%y
+set statusline=File:\ %t\%r%h%w\ [%{&ff},%{&fileencoding},%Y]\ %m%=\ [AscII=\%03.3b]\ [Hex=\%02.2B]\ [Pos=%l,%v,%p%%]\ [LINE=%L]
+
+" STOP using the arrow keys, Dude!
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+
+" Vundle {{{
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
@@ -40,13 +77,13 @@ if has('gui_running')
 endif
 " }}}
 
-" Spaces & Tabs {{{
+" Spaces & T abs {{{
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
 set expandtab       " tabs are spaces
 " }}}
 
-" UI config {{{
+" UI config {{ {
 set number              " show line numbers
 set showcmd             " show command in bottom bar
 set cursorline          " highlight current line
@@ -163,14 +200,7 @@ augroup configgroup
 augroup END
 " }}}
 
-" Backups {{{
-set backup
-set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set backupskip=/tmp/*,/private/tmp/*
-set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set writebackup
-
-" Custom Functions
+" Custom Functions {{{
 " toggle between number and relativenumber
 function! ToggleNumber()
     if(&relativenumber == 1)
