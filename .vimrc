@@ -3,9 +3,10 @@ set nocompatible              " be iMproved, required
 set backup
 set backupdir=$HOME/.vim/backup/
 silent execute '!mkdir -p $HOME/.vim/backup'
+set directory=$HOME/.vim/tmp
+silent execute '!mkdir -p $HOME/.vim/tmp'
 
-syntax on
-set vb
+"set vb
 set noswapfile
 
 if version >= 703
@@ -30,11 +31,6 @@ set laststatus=2
 "set statusline=%<%f\ %m%=\ %h%r\ %-19([%p%%]\ %3l,%02c%03V%)%y
 set statusline=File:\ %t\%r%h%w\ [%{&ff},%{&fileencoding},%Y]\ %m%=\ [AscII=\%03.3b]\ [Hex=\%02.2B]\ [Pos=%l,%v,%p%%]\ [LINE=%L]
 
-" STOP using the arrow keys, Dude!
-map <up> <nop>
-map <down> <nop>
-map <left> <nop>
-map <right> <nop>
 
 " Vundle {{{
 filetype off                  " required
@@ -50,15 +46,22 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'rking/ag.vim'
 Plugin 'ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
-" Bundle 'joonty/vim-phpqa.git'
-Bundle 'ervandew/supertab.git'
-Bundle 'scrooloose/nerdtree.git'
-Bundle 'joonty/vdebug.git'
-Bundle 'joonty/vim-sauce.git'
-Bundle 'spf13/PIV.git'
-Bundle 'leshill/vim-json.git'
-Bundle 'groenewege/vim-less.git'
-Bundle 'hail2u/vim-css3-syntax.git'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'tpope/vim-surround'
+" Plugin 'joonty/vim-phpqa.git'
+Plugin 'ervandew/supertab.git'
+Plugin 'scrooloose/nerdtree.git'
+Plugin 'joonty/vdebug.git'
+Plugin 'joonty/vim-sauce.git'
+Plugin 'spf13/PIV.git'
+Plugin 'leshill/vim-json.git'
+Plugin 'groenewege/vim-less.git'
+Plugin 'hail2u/vim-css3-syntax.git'
+Plugin 'fatih/vim-go'
+Plugin 'jiangmiao/auto-pairs.git'
+Plugin 'mileszs/ack.vim'
+Plugin 'rbgrouleff/bclose.vim.git'
+
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -67,8 +70,10 @@ filetype plugin indent on    " required
 " filetype plugin on }}}
 
 " Colors {{{
-colorscheme badwolf
-syntax enable           " enable syntax processing
+" colorscheme badwolf
+colorscheme solarized
+syntax on           " enable syntax processing
+set background=dark
 " }}}
 
 " Fonts {{{
@@ -80,7 +85,9 @@ endif
 " Spaces & T abs {{{
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
-set expandtab       " tabs are spaces
+set noexpandtab       " tabs are spaces
+set autoindent
+set wrap
 " }}}
 
 " UI config {{ {
@@ -120,9 +127,15 @@ nnoremap $ <nop>
 nnoremap ^ <nop>
 " highlight last inserted text
 nnoremap gV `[v`]
+" STOP using the arrow keys, Dude!
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
 " }}}
 
 " Editing {{{
+autocmd BufLeave,FocusLost * silent! wall
 let g:SuperTabDefaultCompletionType = ""
 " }}}
 
@@ -158,31 +171,23 @@ let g:ctrlp_working_path_mode = 0
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 " }}} 
 
-" Launch Config {{{
-" call pathogen#infect()                      " use pathogen
-" call pathogen#runtime_append_all_bundles()  " use pathogen
-
-" allows cursor change in tmux mode
-if exists('$TMUX')
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-else
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
+" GOLANG {{{
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
 " }}}
 
 " Autogroups {{{
 augroup configgroup
     autocmd!
     autocmd VimEnter * highlight clear SignColumn
-    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
-                \:call <SID>StripTrailingWhitespaces()
     autocmd FileType java setlocal noexpandtab
     autocmd FileType java setlocal list
     autocmd FileType java setlocal listchars=tab:+\ ,eol:-
     autocmd FileType java setlocal formatprg=par\ -w80\ -T4
-    autocmd FileType php setlocal expandtab
+"    autocmd FileType php setlocal expandtab
     autocmd FileType php setlocal list
     autocmd FileType php setlocal listchars=tab:+\ ,eol:-
     autocmd FileType php setlocal formatprg=par\ -w80\ -T4
@@ -199,29 +204,3 @@ augroup configgroup
     autocmd BufEnter *.sh setlocal softtabstop=2
 augroup END
 " }}}
-
-" Custom Functions {{{
-" toggle between number and relativenumber
-function! ToggleNumber()
-    if(&relativenumber == 1)
-        set norelativenumber
-        set number
-    else
-        set relativenumber
-    endif
-endfunc
-
-" strips trailing whitespace at the end of files. this
-" is called on buffer write in the autogroup above.
-function! <SID>StripTrailingWhitespaces()
-    " save last search & cursor position
-    let _s=@/
-    let l = line(".")
-    let c = col(".")
-    %s/\s\+$//e
-    let @/=_s
-    call cursor(l, c)
-endfunction
-" }}}
-
-" vim:foldmethod=marker:foldlevel=0
