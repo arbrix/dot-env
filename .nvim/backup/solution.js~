@@ -1,0 +1,32 @@
+var MongoClient = require('mongodb').MongoClient,
+	assert = require('assert');
+
+MongoClient.connect('mongodb://localhost:27017/test', function(err, db) {
+	"use strict";
+	assert.equal(null, err);
+	console.log("Connected correctly to server");
+	if (err) throw err;
+
+	var imgColl = db.collection('images');
+	//console.log(imgColl);
+	var albColl = db.collection('albums');
+	//console.log(albColl);
+	var imgCursor = imgColl.find({});
+	var delCnt = 0;
+	imgCursor.on("data", function(image) {
+		albColl.find({images:image._id}).count(function(err, count) {
+			if (err) throw err;
+			if (0 === count) {
+				delCnt++;
+				imgColl.remove({_id:image_id});
+			}
+		});
+	});
+	imgCursor.on("end", function() {
+		var resCnt = 49932 - delCnt; 
+		console.log("end with searching orphan image: " + resCnt);
+		db.close();
+	});
+
+	console.log("end!");
+});

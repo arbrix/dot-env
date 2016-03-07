@@ -1,0 +1,70 @@
+---
+ip: "192.168.10.10"
+memory: 512
+cpus: 1
+provider: virtualbox
+
+authorize: ~/.ssh/id_rsa.pub
+
+keys:
+    - ~/.ssh/id_rsa
+
+folders:
+    - map: ~/dev/lumen
+      to: /home/vagrant/lumen
+    - map: ~/dev/wp-test
+      to: /home/vagrant/wp
+    - map: ~/dev/wp-js
+      to: /home/vagrant/js
+    - map: ~/dev/zf2
+      to: /home/vagrant/zf2
+    - map: ~/dev/microsites
+      to: /home/vagrant/micro
+    - map: ~/dev/wp-test2
+      to: /home/vagrant/wp2
+    - map: ~/dev/bsv
+      to: /home/vagrant/bsv
+    - map: ~/dev/wp-cpo
+      to: /home/vagrant/wp-cpo
+    - map: ~/dev/xt-test
+      to: /home/vagrant/xt
+
+sites:
+    - map: lumen.app
+      to: /home/vagrant/lumen/public
+    - map: wp.dev
+      to: /home/vagrant/wp/web
+    - map: js.dev
+      to: /home/vagrant/js/web
+    - map: zf2.dev
+      to: /home/vagrant/zf2/public
+    - map: micro.dev
+      to: /home/vagrant/micro
+    - map: wp2.dev
+      to: /home/vagrant/wp2/web
+    - map: bsv.dev
+      to: /home/vagrant/bsv
+    - map: cpo.dev
+      to: /home/vagrant/wp-cpo/web
+    - map: xt.dev
+      to: /home/vagrant/xt
+
+databases:
+    - clubok
+    - wp
+    - wp2
+    - js
+    - zf2
+    - bsv 
+    - cpo
+    - xt 
+
+variables:
+    - key: APP_ENV
+      value: local
+
+# blackfire:
+#     - id: foo
+#       token: bar
+#       client-id: foo
+#       cli-token: bar

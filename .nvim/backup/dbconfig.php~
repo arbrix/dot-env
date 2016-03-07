@@ -1,0 +1,21 @@
+<?PHP
+
+define ("DBHOST", "localhost");
+
+define ("DBNAME", "bsv");
+
+define ("DBUSER", "homestead");
+
+define ("DBPASS", "sicret");
+
+define ("PREFIX", "dle");
+
+define ("USERPREFIX", "dle");
+
+define ("COLLATE", "utf8");
+
+define('SECURE_AUTH_KEY', 'fad8sTv7dRdl^b)yKs]SN;MLkBH(S8([oRj77mY6HJR:Ji.JyB&YzZ#RdC}k-i^');
+
+$db = new db;
+
+?>
