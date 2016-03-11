@@ -1,1 +1,1 @@
-/Users/arbrix/.vimrc
+/Users/arbrix/.arb-dot/.neovimrc
