@@ -1,2 +1,4 @@
 *vim/backup
 *vim/bundle
+.nvim/.init*
+gitconfig
