@@ -33,9 +33,9 @@ if system('uname -o') =~ '^GNU/'
 endif
 
 " Add or remove your Bundles here:
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'Shougo/neosnippet-snippets'
+" NeoBundle 'Shougo/neocomplete.vim'
+" NeoBundle 'Shougo/neosnippet.vim'
+" NeoBundle 'Shougo/neosnippet-snippets'
 
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'ctrlpvim/ctrlp.vim'
@@ -167,7 +167,7 @@ set wrap
 set backspace=indent,eol,start
 set smartindent
 " set copyindent
-set number
+set relativenumber
 set cursorline
 set shiftround
 set ignorecase
@@ -205,11 +205,11 @@ highlight SpecialKey guifg=#4a4a59
 " Disable AutoComplPop
 let g:acp_enableAtStartup = 0
 " Use neocomplete
-let g:neocomplete#enable_at_startup = 1
+" let g:neocomplete#enable_at_startup = 1
 " Use smartcase
-let g:neocomplete#enable_smart_case = 1
+" let g:neocomplete#enable_smart_case = 1
 " Set minimum syntax keyword length
-let g:neocomplete#sources#syntax#min_keyword_length = 3
+" let g:neocomplete#sources#syntax#min_keyword_length = 3
 " let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
 " Define dictionary
@@ -226,24 +226,24 @@ let g:neocomplete#sources#syntax#min_keyword_length = 3
 " let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
 " Plugin key-mappings
-inoremap <expr><C-g> neocomplete#undo_completion()
-inoremap <expr><C-l> neocomplete#complete_common_string()
+" inoremap <expr><C-g> neocomplete#undo_completion()
+" inoremap <expr><C-l> neocomplete#complete_common_string()
 
 " Recommended key-mappings
 " <CR>: close popup and save indent
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-    return neocomplete#close_popup() . "\<CR>"
+" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+" function! s:my_cr_function()
+    " return neocomplete#close_popup() . "\<CR>"
     " For no inserting <CR> key
     " return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
+" endfunction
 " <TAB>: completion
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+" inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y> neocomplete#close_popup()
-inoremap <expr><C-e> neocomplete#cancel_popup()
+" inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" inoremap <expr><C-y> neocomplete#close_popup()
+" inoremap <expr><C-e> neocomplete#cancel_popup()
 " Close popup by <Space>
 " inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
 
@@ -286,21 +286,22 @@ inoremap <expr><C-e> neocomplete#cancel_popup()
 " let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 " neosnippet
-let g:neosnippet#enable_snipmate_compatibility = 1
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
+" let g:neosnippet#enable_snipmate_compatibility = 1
+" imap <C-k> <Plug>(neosnippet_expand_or_jump)
+" smap <C-k> <Plug>(neosnippet_expand_or_jump)
+" xmap <C-k> <Plug>(neosnippet_expand_target)
 " SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
+" imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+" \ "\<Plug>(neosnippet_expand_or_jump)"
+" \: pumvisible() ? "\<C-n>" : "\<TAB>"
+" smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+" \ "\<Plug>(neosnippet_expand_or_jump)"
+" \: "\<TAB>"
 " For conceal markers.
-if has('conceal')
-    set conceallevel=2 concealcursor=niv
-endif
+" if has('conceal')
+"     set conceallevel=2 concealcursor=niv
+" endif
+
 " neocomplete like
 " https://github.com/Shougo/deoplete.nvim/blob/master/doc/deoplete.txt
 set completeopt+=noinsert
@@ -355,30 +356,28 @@ let g:go_play_open_browser = 0
 let g:go_term_mode = "split"
 " By default the testing commands run asynchronously in the background and display results with go#jobcontrol#Statusline().
 let g:go_term_enabled = 1
-" Sometimes when using both vim-go and syntastic Vim will start lagging while saving and opening files. The following fixes this:
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+
 " go lint
 " install golint: go get -u github.com/golang/lint/golint
-set rtp+=~/dev/go/src/github.com/golang/lint/misc/vim
-augroup FileType go
-  au!
-  au FileType go nmap gd <Plug>(go-def)
-  au FileType go nmap <Leader>dd <Plug>(go-def-vertical)
-
-  au FileType go nmap <Leader>dv <Plug>(go-doc-vertical)
-  au FileType go nmap <Leader>db <Plug>(go-doc-browser)
-
-  au FileType go nmap <Leader>gi <Plug>(go-info)
-
-  au FileType go nmap <leader>gr <Plug>(go-run)
-  au FileType go nmap <leader>rb <Plug>(go-build)
-  au FileType go nmap <leader>gt <Plug>(go-test)
-  " Run :GoRun in a new tab, horizontal split or vertical split terminal
-  au FileType go nmap <leader>rt <Plug>(go-run-tab)
-  au FileType go nmap <Leader>rs <Plug>(go-run-split)
-  au FileType go nmap <Leader>rv <Plug>(go-run-vertical)
-augroup END
+"set rtp+=~/dev/go/src/github.com/golang/lint/misc/vim
+"augroup FileType go
+"  au!
+"  au FileType go nmap gd <Plug>(go-def)
+"  au FileType go nmap <Leader>dd <Plug>(go-def-vertical)
+"
+"  au FileType go nmap <Leader>dv <Plug>(go-doc-vertical)
+"  au FileType go nmap <Leader>db <Plug>(go-doc-browser)
+"
+"  au FileType go nmap <Leader>gi <Plug>(go-info)
+"
+"  au FileType go nmap <leader>gr <Plug>(go-run)
+"  au FileType go nmap <leader>rb <Plug>(go-build)
+"  au FileType go nmap <leader>gt <Plug>(go-test)
+"  " Run :GoRun in a new tab, horizontal split or vertical split terminal
+"  au FileType go nmap <leader>rt <Plug>(go-run-tab)
+"  au FileType go nmap <Leader>rs <Plug>(go-run-split)
+"  au FileType go nmap <Leader>rv <Plug>(go-run-vertical)
+"augroup END
 
 augroup myvimrc
     au!
@@ -433,7 +432,7 @@ let g:syntastic_aggregate_errors = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_go_checkers = ['gometalinter']
 let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 
@@ -517,6 +516,16 @@ let g:netrw_special_syntax= 1
  let g:netrw_liststyle = 3
 
  nnoremap <Leader><Leader> :Tlist<CR><C-W>h<C-W>s:e .<CR><C-W>l:let g:netrw_chgwin=winnr()<CR><C-W>h
+
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set number
+  else
+    set relativenumber
+  endif
+endfunc
+
+nnoremap <C-n> :call NumberToggle()<cr>
 
 """"""""""
 "" vim-tmux-navigator
