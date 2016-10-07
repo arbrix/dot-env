@@ -129,16 +129,16 @@ set listchars=tab:│\ ,eol:¬
 nmap <leader>w :w!<cr>
 
 " Disabling arrow keys. Use hjkl, Luke!
-"  nnoremap <up> <nop>
-"  nnoremap <down> <nop>
-"  nnoremap <left> <nop>
-"  nnoremap <right> <nop>
-"  inoremap <up> <nop>
-"  inoremap <down> <nop>
-"  inoremap <left> <nop>
-"  inoremap <right> <nop>
-"  nnoremap j gj
-"  nnoremap k gk
+  nnoremap <up> <nop>
+  nnoremap <down> <nop>
+  nnoremap <left> <nop>
+  nnoremap <right> <nop>
+  inoremap <up> <nop>
+  inoremap <down> <nop>
+  inoremap <left> <nop>
+  inoremap <right> <nop>
+  nnoremap j gj
+  nnoremap k gk
 
 "" no one is really happy until you have this shortcuts
 cnoreabbrev W! w!
@@ -149,6 +149,9 @@ cnoreabbrev wQ wq
 cnoreabbrev WQ wq
 cnoreabbrev W w
 cnoreabbrev Q q
+
+" Get efficient: shortcut mappings
+nnoremap ; :
 
 " Better buffer search
 map /  <Plug>(incsearch-forward)
@@ -165,6 +168,7 @@ vmap > >gv
 
 " Map jk to <Esc>
 imap jk <Esc>
+
 """"""""""
 " Split window
 noremap <leader>h :<C-u>split<CR>
