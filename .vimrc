@@ -29,6 +29,7 @@ Bundle 'jpalardy/vim-slime'
 
 " Languages
 Bundle 'fatih/vim-go'
+Bundle 'AndrewRadev/splitjoin.vim'
 Bundle 'pangloss/vim-javascript'
 " Bundle 'rust-lang/rust.vim'
 
@@ -41,9 +42,10 @@ Bundle 'Raimondi/delimitMate'
 " Bundle 'easymotion/vim-easymotion'
 
 " Completion
-Bundle 'Valloric/YouCompleteMe'
+"Bundle 'Valloric/YouCompleteMe'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
+Bundle 'ctrlpvim/ctrlp.vim'
 "Bundle 'marijnh/tern_for_vim'
 
 " VCS
@@ -64,7 +66,7 @@ Bundle 'jordwalke/flatlandia'
 Bundle 'gosukiwi/vim-atom-dark'
 Bundle 'fatih/molokai'
 Bundle 'joshdick/onedark.vim'
-Bundle 'joshdick/airline-onedark.vim'
+"Bundle 'joshdick/airline-onedark.vim'
 Bundle 'mkarmona/colorsbox'
 
 " Unite
@@ -90,6 +92,8 @@ set modelines=0
 
 set scrolloff=3
 set autoindent
+set autowrite
+set autoread                    " Automatically read changed files
 set showmode
 set showcmd
 set hidden
@@ -100,10 +104,12 @@ set shell=/bin/sh
 set noerrorbells
 set novisualbell
 " set cursorline
-set ttyfast
+set ttyfast                     " Indicate fast terminal conn for faster redraw
+set ttymouse=xterm2             " Indicate terminal type for mouse codes
+set ttyscroll=3                 " Speedup scrolling
+set laststatus=2                " Show status line always
 " set ruler
 set backspace=indent,eol,start
-set laststatus=2
 set relativenumber
 " set relativenumber
 set lazyredraw
@@ -169,6 +175,11 @@ vmap > >gv
 " Map jk to <Esc>
 imap jk <Esc>
 
+" easier to jump between errors in quickfix list
+map <C-n> :cnext<CR>
+map <C-m> :cprevious<CR>
+nnoremap <leader>a :cclose<CR>
+
 """"""""""
 " Split window
 noremap <leader>h :<C-u>split<CR>
@@ -178,7 +189,7 @@ noremap <leader>v :<C-u>vsplit<CR>
 noremap <leader>q :bp<CR>
 noremap <leader>w :bn<CR>
 " Close buffer
-noremap <leader>c :bd<CR>
+noremap <leader>d :bd<CR>
 """"""""""
 " Set working directory
 nnoremap <leader>. :lcd %:p:h<CR>
@@ -208,6 +219,13 @@ set fileencodings=utf-8
 set ffs=unix,dos,mac
 
 
+
+" Act like D and C
+nnoremap Y y$
+
+" Enter automatically into the files directory
+autocmd BufEnter * silent! lcd %:p:h
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -215,8 +233,6 @@ set ffs=unix,dos,mac
 set nobackup
 set nowb
 set noswapfile
-
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -307,6 +323,60 @@ let g:go_term_mode = "split"
 " By default the testing commands run asynchronously in the background and display results with go#jobcontrol#Statusline().
 let g:go_term_enabled = 1
 
+" Open :GoDeclsDir with ctrl-g
+nmap <C-g> :GoDeclsDir<cr>
+imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
+
+
+augroup go
+  autocmd!
+
+  " Show by default 4 spaces for a tab
+  autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
+
+  " :GoBuild and :GoTestCompile
+  autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+
+  " :GoTest
+  autocmd FileType go nmap <leader>t  <Plug>(go-test)
+
+  " :GoRun
+  autocmd FileType go nmap <leader>r  <Plug>(go-run)
+
+  " :GoDoc
+  autocmd FileType go nmap <Leader>d <Plug>(go-doc)
+
+  " :GoCoverageToggle
+  autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+
+  " :GoInfo
+  autocmd FileType go nmap <Leader>i <Plug>(go-info)
+
+  " :GoMetaLinter
+  autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
+
+  " :GoDef but opens in a vertical split
+  autocmd FileType go nmap <Leader>v <Plug>(go-def-vertical)
+  " :GoDef but opens in a horizontal split
+  autocmd FileType go nmap <Leader>s <Plug>(go-def-split)
+
+  " :GoAlternate  commands :A, :AV, :AS and :AT
+  autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+  autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+  autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+  autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+augroup END
+
+" build_go_files is a custom function that builds or compiles the test file.
+" It calls :GoBuild if its a Go file, or :GoTestCompile if it's a test file
+function! s:build_go_files()
+  let l:file = expand('%')
+  if l:file =~# '^\f\+_test\.go$'
+    call go#cmd#Test(0, 1)
+  elseif l:file =~# '^\f\+\.go$'
+    call go#cmd#Build(0)
+  endif
+endfunction
 
 " DelimitMate
 let g:delimitMate_expand_cr = 1
