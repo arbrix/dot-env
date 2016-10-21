@@ -1,162 +1,186 @@
-set nocompatible
-filetype off
-
-
-"{{{ Vundle plugins
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" Plugins
-Plugin 'VundleVim/Vundle.vim'
-
+call plug#begin()
 " UI
-Plugin 'gundo'
-Plugin 'itchyny/lightline.vim'
-" Plugin 'bling/vim-airline'
-Plugin 'tpope/vim-repeat'
-" Plugin 'Valloric/MatchTagAlways'
-Plugin 'scrooloose/nerdtree'
-Plugin 'majutsushi/tagbar'
-Plugin 'vasconcelloslf/vim-interestingwords'
-Plugin 'kshenoy/vim-signature'
-Plugin 'haya14busa/incsearch.vim'
-Plugin 'airblade/vim-rooter'
-Plugin 'mhinz/vim-startify'
+Plug 'gundo'
+Plug 'itchyny/lightline.vim'
+Plug 'tpope/vim-repeat'
+Plug 'scrooloose/nerdtree'
+Plug 'majutsushi/tagbar'
+Plug 'kshenoy/vim-signature'
+Plug 'haya14busa/incsearch.vim'
+Plug 'airblade/vim-rooter'
 
 " Misc
-Plugin 'scrooloose/syntastic'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-vinegar'
-Plugin 'jpalardy/vim-slime'
+Plug 'scrooloose/syntastic'
+Plug 'tpope/vim-unimpaired'
 
 " Languages
-Plugin 'fatih/vim-go'
-Plugin 'AndrewRadev/splitjoin.vim'
-Plugin 'pangloss/vim-javascript'
-" Plugin 'rust-lang/rust.vim'
+Plug 'fatih/vim-go'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'pangloss/vim-javascript'
 
 " Text editing
-Plugin 'tpope/vim-surround'
-Plugin 'godlygeek/tabular'
-Plugin 'scrooloose/nerdcommenter'
-"Plugin 'tomtom/tcomment_vim'
-Plugin 'Raimondi/delimitMate'
-" Plugin 'easymotion/vim-easymotion'
+Plug 'tpope/vim-surround'
+Plug 'godlygeek/tabular'
+Plug 'scrooloose/nerdcommenter'
+Plug 'Raimondi/delimitMate'
 
 " Completion
-"Plugin 'Valloric/YouCompleteMe'
-Plugin 'maralla/completor.vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'ctrlpvim/ctrlp.vim'
-"Plugin 'marijnh/tern_for_vim'
+Plug 'maralla/completor.vim'
+Plug 'SirVer/ultisnips'
+Plug 'ervandew/supertab'
+Plug 'honza/vim-snippets'
+Plug 'ctrlpvim/ctrlp.vim'
 
 " VCS
-Plugin 'tpope/vim-fugitive'
-Plugin 'mhinz/vim-signify'
+Plug 'tpope/vim-fugitive'
+Plug 'mhinz/vim-signify'
 
 " Color themes
-Plugin 'sjl/badwolf'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'zenorocha/dracula-theme', {'rtp': 'vim/'}
-Plugin 'abra/vim-obsidian'
-Plugin 'daddye/soda.vim'
-Plugin 'john2x/flatui.vim'
-Plugin 'nice/sweater'
-Plugin 'junegunn/seoul256.vim'
-Plugin 'whatyouhide/vim-gotham'
-Plugin 'jordwalke/flatlandia'
-Plugin 'gosukiwi/vim-atom-dark'
-Plugin 'fatih/molokai'
-Plugin 'joshdick/onedark.vim'
-"Plugin 'joshdick/airline-onedark.vim'
-Plugin 'mkarmona/colorsbox'
+Plug 'sjl/badwolf'
+Plug 'altercation/vim-colors-solarized'
+Plug 'zenorocha/dracula-theme', {'rtp': 'vim/'}
+Plug 'abra/vim-obsidian'
+Plug 'daddye/soda.vim'
+Plug 'john2x/flatui.vim'
+Plug 'nice/sweater'
+Plug 'junegunn/seoul256.vim'
+Plug 'whatyouhide/vim-gotham'
+Plug 'jordwalke/flatlandia'
+Plug 'gosukiwi/vim-atom-dark'
+Plug 'fatih/molokai'
+Plug 'joshdick/onedark.vim'
+Plug 'mkarmona/colorsbox'
 
 " Unite
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/vimproc.vim'
-Plugin 'tsukkee/unite-tag'
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/vimproc.vim'
+Plug 'tsukkee/unite-tag'
 
-" DB
-" Plugin 'dbext.vim'
+call plug#end()
 
-call vundle#end()
-" Vundle plugins }}}
-
-set runtimepath+=~/.vim/bundle/swift.vim
-
-
+""""""""""""""""""""""
+"      Settings      "
+""""""""""""""""""""""
+set nocompatible
+filetype off
 filetype plugin indent on
-colorscheme solarized
-syntax on
-set background=dark
-set mouse=a
-set modelines=0
-
-set scrolloff=3
-set autoindent
-set autowrite
-set autoread                    " Automatically read changed files
-set showmode
-set showcmd
-set hidden
-set wildmenu
-set wildmode=list:longest
-set wildignore=*.swp,*.bak,.DS_Store
-set shell=/bin/sh
-set noerrorbells
-set novisualbell
-" set cursorline
 set ttyfast                     " Indicate fast terminal conn for faster redraw
 set ttymouse=xterm2             " Indicate terminal type for mouse codes
 set ttyscroll=3                 " Speedup scrolling
 set laststatus=2                " Show status line always
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+set fileencoding=utf-8
+set fileencodings=utf-8
+set autoindent
+set autowrite
+set autoread                    " Automatically read changed files
+set incsearch                   " Shows the match while typing
+set hlsearch                    " Highlight found searches
+set noerrorbells                " No beeps
+set relativenumber
+set showcmd
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Files, backups and undo
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set smarttab
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set expandtab
+
+set si "Smart indent
+set wrap "Wrap lines
+
+set textwidth=79
+set formatoptions=qrn1
+set colorcolumn=80
+set foldenable
+
+set list
+set listchars=tab:│\ ,eol:¬
+
+set backspace=2
+"Invisible character colors 
+highlight NonText guifg=#4a4a59
+highlight SpecialKey guifg=#4a4a59
+
+set hidden                      " Buffer should still exist if window is closed
+set fileformats=unix,dos,mac    " Prefer Unix over Windows over OS 9 formats
+
+set splitright                  " Vertical windows should be split to right
+set splitbelow                  " Horizontal windows should split to bottom
+set noshowmatch                 " Do not show matching brackets by flickering
+set noshowmode                  " We show the mode with airline or lightline
+
+set ignorecase                  " Search case insensitive...
+set smartcase                   " ... but not it begins with upper case
+set completeopt=menu,menuone    " Show popup menu, even if there is one entry
+set pumheight=10                " Completion window max size
+set nocursorcolumn              " Do not highlight column (speeds up highlighting)
+set nocursorline                " Do not highlight cursor (speeds up highlighting)
+set lazyredraw                  " Wait to redraw
+
+" Enable to copy to clipboard for operations like yank, delete, change and put
+" http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
+if has('unnamedplus')
+  set clipboard^=unnamed
+  set clipboard^=unnamedplus
+endif
+
+" This enables us to undo files even if you exit Vim.
+if has('persistent_undo')
+  set undofile
+  set undodir=~/.config/vim/tmp/undo//
+endif
+
+" Colorscheme
+colorscheme solarized
+syntax enable
+set t_Co=256
+set background=dark
+set mouse=a
+set modelines=0
+
+set wildmenu
+set wildmode=list:longest
+set wildignore=*.swp,*.bak,.DS_Store
+set shell=/bin/sh
 " set ruler
 set backspace=indent,eol,start
-set relativenumber
-" set relativenumber
-set lazyredraw
 " set undofile
 hi vertsplit guifg=fg guibg=bg
+
+""""""""""""""""""""""
+"      Mappings      "
+""""""""""""""""""""""
 
 let mapleader = ","
 
 nnoremap / /\v
 vnoremap / /\v
-set ignorecase
-set smartcase
-set gdefault
-set incsearch
-set showmatch
-set hlsearch
 nnoremap <leader><space> :noh<cr>
-
-
-set list
-set listchars=tab:│\ ,eol:¬
 
 nmap <leader>w :w!<cr>
 
 " Disabling arrow keys. Use hjkl, Luke!
-  nnoremap <up> <nop>
-  nnoremap <down> <nop>
-  nnoremap <left> <nop>
-  nnoremap <right> <nop>
-  inoremap <up> <nop>
-  inoremap <down> <nop>
-  inoremap <left> <nop>
-  inoremap <right> <nop>
-  nnoremap j gj
-  nnoremap k gk
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
 
-"" no one is really happy until you have this shortcuts
-cnoreabbrev W! w!
-cnoreabbrev Q! q!
-cnoreabbrev Wq wq
-cnoreabbrev Wa wa
-cnoreabbrev wQ wq
-cnoreabbrev WQ wq
-cnoreabbrev W w
-cnoreabbrev Q q
 
 " Get efficient: shortcut mappings
 nnoremap ; :
@@ -200,7 +224,6 @@ noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 " Opens a tab edit command with the path of the currently edited file filled
 noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 
-
 " Set extra options when running in GUI mode
 if has("gui_running")
     set guioptions-=T " Remove toolbar
@@ -212,15 +235,6 @@ if has("gui_running")
     set guifont=Meslo\ LG\ S\ for\ Powerline:h12
 endif
 
-" Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf8
-set fileencoding=utf-8
-set fileencodings=utf-8
-
-" Use Unix as the standard file type
-set ffs=unix,dos,mac
-
-
 
 " Act like D and C
 nnoremap Y y$
@@ -228,35 +242,6 @@ nnoremap Y y$
 " Enter automatically into the files directory
 autocmd BufEnter * silent! lcd %:p:h
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
-set noswapfile
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set smarttab
-set shiftwidth=4
-set tabstop=4
-set softtabstop=4
-set expandtab
-
-set si "Smart indent
-set wrap "Wrap lines
-
-set textwidth=79
-set formatoptions=qrn1
-set colorcolumn=80
-set foldenable
-
-set backspace=2
-"Invisible character colors 
-highlight NonText guifg=#4a4a59
-highlight SpecialKey guifg=#4a4a59
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
@@ -274,6 +259,9 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+"""""""""""""""""""""
+"      Plugins      "
+"""""""""""""""""""""
 
 " NERDTree
 let g:NERDTreeChDirMode=2
@@ -306,6 +294,7 @@ nmap <silent> <F10> :SyntasticCheck<CR>
 
 
 " vim-go
+let g:go_bin_path = expand("~/dev/go/bin")
 let g:go_autodetect_gopath = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
@@ -338,53 +327,53 @@ imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
 
 
 augroup go
-autocmd!
-
-" Show by default 4 spaces for a tab
-autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
-
-" :GoBuild and :GoTestCompile
-autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-
-" :GoTest
-autocmd FileType go nmap <leader>t  <Plug>(go-test)
-
-" :GoRun
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
-
-" :GoDoc
-" autocmd FileType go nmap <Leader>d <Plug>(go-doc)
-
-" :GoCoverageToggle
-autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
-
-" :GoInfo
-autocmd FileType go nmap <Leader>i <Plug>(go-info)
-
-" :GoMetaLinter
-autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
-
-" :GoDef but opens in a vertical split
-autocmd FileType go nmap <Leader>dv <Plug>(go-def-vertical)
-" :GoDef but opens in a horizontal split
-autocmd FileType go nmap <Leader>ds <Plug>(go-def-split)
-
-" :GoAlternate  commands :A, :AV, :AS and :AT
-autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
-autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
-autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
-autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+    autocmd!
+    
+    " Show by default 4 spaces for a tab
+    autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
+    
+    " :GoBuild and :GoTestCompile
+    autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+    
+    " :GoTest
+    autocmd FileType go nmap <leader>t  <Plug>(go-test)
+    
+    " :GoRun
+    autocmd FileType go nmap <leader>r  <Plug>(go-run)
+    
+    " :GoDoc
+    " autocmd FileType go nmap <Leader>d <Plug>(go-doc)
+    
+    " :GoCoverageToggle
+    autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+    
+    " :GoInfo
+    autocmd FileType go nmap <Leader>i <Plug>(go-info)
+    
+    " :GoMetaLinter
+    autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
+    
+    " :GoDef but opens in a vertical split
+    autocmd FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+    " :GoDef but opens in a horizontal split
+    autocmd FileType go nmap <Leader>ds <Plug>(go-def-split)
+    
+    " :GoAlternate  commands :A, :AV, :AS and :AT
+    autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+    autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+    autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+    autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 augroup END
 
 " build_go_files is a custom function that builds or compiles the test file.
 " It calls :GoBuild if its a Go file, or :GoTestCompile if it's a test file
 function! s:build_go_files()
-let l:file = expand('%')
-if l:file =~# '^\f\+_test\.go$'
-call go#cmd#Test(0, 1)
-elseif l:file =~# '^\f\+\.go$'
-call go#cmd#Build(0)
-endif
+    let l:file = expand('%')
+    if l:file =~# '^\f\+_test\.go$'
+    call go#cmd#Test(0, 1)
+    elseif l:file =~# '^\f\+\.go$'
+    call go#cmd#Build(0)
+    endif
 endfunction
 
 " DelimitMate
@@ -412,12 +401,8 @@ nmap <F8> :TagbarToggle<CR>
 " UltiSnips
 let g:UltiSnipsExpandTrigger = "<c-j>"
 
-
-au FileType python nmap <Leader>gd :YcmCompleter GoToDefinition<CR>
-
 let g:signify_vcs_list = [ 'git' ]
 
-" map <leader>cd :cd %:p:h<cr>:pwd<cr>
 " Lightline
 let g:lightline = {
       \ 'colorscheme':'solarized',
@@ -478,41 +463,6 @@ endfunction
 function! LightLineMode()
   return winwidth(0) > 60 ? lightline#mode() : ''
 endfunction
-""""''''""""
-"  let g:airline_theme='onedark'
-"  let g:airline_powerline_fonts=1
-"  let g:airline_enable_branch = 1
-""""""""""
-"" vim-airline
-"  let g:airline#extensions#tabline#enabled = 1
-"  let g:airline#extensions#csv#enabled = 1
-"  let g:airline#extensions#tagbar#enabled = 1
-"  let g:airline#extensions#hunks#enabled = 1
-"  let g:airline#extensions#syntastic#enabled = 1
-"  let g:airline#extensions#branch#enabled = 1
-"  
-"  if !exists('g:airline_symbols')
-"    let g:airline_symbols = {}
-"  endif
-"  
-"  if !exists('g:airline_powerline_fonts')
-"    let g:airline#extensions#tabline#left_sep = ' '
-"    let g:airline#extensions#tabline#left_alt_sep = '|'
-"    let g:airline_left_sep          = '▶'
-"    let g:airline_left_alt_sep      = '»'
-"    let g:airline_right_sep         = '◀'
-"    let g:airline_right_alt_sep     = '«'
-"    let g:airline#extensions#branch#prefix     = '⤴' "➔, ➥, ⎇
-"    let g:airline#extensions#readonly#symbol   = '⊘'
-"    let g:airline#extensions#linecolumn#prefix = '¶'
-"    let g:airline#extensions#paste#symbol      = 'ρ'
-"    let g:airline_symbols.linenr    = '␊'
-"    let g:airline_symbols.branch    = '⎇'
-"    let g:airline_symbols.paste     = 'ρ'
-"    let g:airline_symbols.paste     = 'Þ'
-"    let g:airline_symbols.paste     = '∥'
-"    let g:airline_symbols.whitespace = 'Ξ'
-"  endif
 
 """"""""""
 "" Status bar
