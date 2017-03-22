@@ -10,20 +10,14 @@ endif
 call plug#begin()
 
 " UI
-" Plug 'gundo'
 Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-repeat'
 Plug 'scrooloose/nerdtree'
 Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
-" Plug 'majutsushi/tagbar'
-" Plug 'kshenoy/vim-signature'
-" Plug 'haya14busa/incsearch.vim'
-" Plug 'airblade/vim-rooter'
+Plug 'majutsushi/tagbar'
 
 " Misc
-" Plug 'scrooloose/syntastic'
-" Plug 'tpope/vim-unimpaired'
 Plug 'ConradIrwin/vim-bracketed-paste' " enables transparent pasting into vim. (i.e. no more :set paste!)
 Plug 't9md/vim-choosewin' " Land on window you chose like tmux's 'display-pane'
 
@@ -33,8 +27,6 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-hclfmt'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
-" Plug 'nsf/gocode', {'rtp': 'nvim/'} " Install plugin from https://github.com/nsf/gocode
-" Plug 'pangloss/vim-javascript'
 
 " Text editing
 Plug 'Raimondi/delimitMate'
@@ -43,68 +35,30 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'unblevable/quick-scope'
-" Plug 'godlygeek/tabular'
-" Plug 'scrooloose/nerdcommenter'
 
 " Completion
-"Plug 'Valloric/YouCompleteMe'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-" Plug 'ervandew/supertab'
 Plug 'ctrlpvim/ctrlp.vim'
 
 " VCS
 Plug 'tpope/vim-fugitive'
-" Plug 'mhinz/vim-signify'
 
 " Color themes
-" Plug 'sjl/badwolf'
 Plug 'fatih/badwolf'
 Plug 'w0ng/vim-hybrid'
 Plug 'altercation/vim-colors-solarized'
 Plug 'zenorocha/dracula-theme', {'rtp': 'vim/'}
-" Plug 'abra/vim-obsidian'
-" Plug 'daddye/soda.vim'
-" Plug 'john2x/flatui.vim'
-" Plug 'nice/sweater'
-" Plug 'junegunn/seoul256.vim'
-" Plug 'whatyouhide/vim-gotham'
-" Plug 'jordwalke/flatlandia'
-" Plug 'gosukiwi/vim-atom-dark'
 Plug 'fatih/molokai'
 Plug 'joshdick/onedark.vim'
 Plug 'mkarmona/colorsbox'
 Plug 'chriskempson/base16-vim'
 
 " Unite
-" Plug 'Shougo/unite.vim'
-" Plug 'tsukkee/unite-tag'
 Plug 'hashivim/vim-hashicorp-tools'
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-
-" Asynchronous execution library
-" Plug 'Shougo/vimproc.vim', {
-"       \ 'build' : {
-"       \     'windows' : 'tools\\update-dll-mingw',
-"       \     'cygwin' : 'make -f make_cygwin.mak',
-"       \     'mac' : 'make -f make_mac.mak',
-"       \     'unix' : 'make -f make_unix.mak',
-"       \    },
-"       \ }
-
-"" Go Lang Bundle
-" Plug 'Shougo/deoplete.nvim'
-" Plug 'zchee/deoplete-go', { 
-"       \ 'build' : {
-"       \     'windows' : 'tools\\update-dll-mingw2',
-"       \     'cygwin' : 'make',
-"       \     'mac' : 'make',
-"       \     'unix' : 'make',
-"       \    },
-"       \ }
-
 
 " Required
 call plug#end()
@@ -277,11 +231,7 @@ else
   let g:molokai_original = 1
   colorscheme molokai
 endif
-" syntax enable
-"set t_Co=256
-" let g:solarized_termcolors=256
-" set background=dark
-" colorscheme solarized
+
 set mouse=a
 set modelines=0
 
@@ -338,7 +288,6 @@ inoremap <up> <nop>
 inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
-
 
 " Get efficient: shortcut mappings
 nnoremap ; :
@@ -513,22 +462,6 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#go#align_class = 1
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
-" Syntastic
-" let g:syntastic_enable_signs=1
-" let g:syntastic_always_populate_loc_list = 0
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_error_symbol='✗'
-" let g:syntastic_warning_symbol='⚠'
-" let g:syntastic_style_error_symbol = '✗'
-" let g:syntastic_style_warning_symbol = '⚠'
-" 
-" let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-" let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-" nmap <silent> <F10> :SyntasticCheck<CR>
-
-
 " vim-go
 let g:go_bin_path = expand("~/dev/go/bin")
 let g:go_autodetect_gopath = 1
@@ -565,7 +498,6 @@ let g:go_metalinter_deadline = "5s"
 " Open :GoDeclsDir with ctrl-g
 nmap <C-g> :GoDeclsDir<cr>
 imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
-
 
 augroup go
     autocmd!
@@ -902,9 +834,3 @@ let g:signify_vcs_list = [ 'git' ]
 if exists("*fugitive#statusline")
   set statusline+=%{fugitive#statusline()}
 endif
-
-" set statusline+=%#warningmsg#
-" enable only after full installation
-" if exists('g:syntastic#SyntasticStatuslineFlag')
-"     set statusline+=%{SyntasticStatuslineFlag()}
-" endif
