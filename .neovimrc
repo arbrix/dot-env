@@ -47,8 +47,11 @@ Plug 'unblevable/quick-scope'
 " Plug 'scrooloose/nerdcommenter'
 
 " Completion
-Plug 'Valloric/YouCompleteMe'
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+"Plug 'Valloric/YouCompleteMe'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 " Plug 'ervandew/supertab'
 Plug 'ctrlpvim/ctrlp.vim'
 
@@ -82,14 +85,14 @@ Plug 'hashivim/vim-hashicorp-tools'
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 
 " Asynchronous execution library
-Plug 'Shougo/vimproc.vim', {
-      \ 'build' : {
-      \     'windows' : 'tools\\update-dll-mingw',
-      \     'cygwin' : 'make -f make_cygwin.mak',
-      \     'mac' : 'make -f make_mac.mak',
-      \     'unix' : 'make -f make_unix.mak',
-      \    },
-      \ }
+" Plug 'Shougo/vimproc.vim', {
+"       \ 'build' : {
+"       \     'windows' : 'tools\\update-dll-mingw',
+"       \     'cygwin' : 'make -f make_cygwin.mak',
+"       \     'mac' : 'make -f make_mac.mak',
+"       \     'unix' : 'make -f make_unix.mak',
+"       \    },
+"       \ }
 
 "" Go Lang Bundle
 " Plug 'Shougo/deoplete.nvim'
@@ -504,11 +507,11 @@ let g:python3_host_prog  = '/usr/local/bin/python3'
 let g:loaded_python_provider = 1
 " Skip the check of neovim module
 let g:python3_host_skip_check = 1
-" let g:deoplete#sources#go#align_class = 1
-" let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 " Use deoplete.
-" let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#go#align_class = 1
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 " Syntastic
 " let g:syntastic_enable_signs=1
