@@ -27,6 +27,7 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-hclfmt'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
+Plug 'w0rp/ale'
 
 " Text editing
 Plug 'Raimondi/delimitMate'
@@ -35,12 +36,13 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'unblevable/quick-scope'
+Plug 'buoto/gotests-vim'
 
 " Completion
 Plug 'Shougo/neocomplete.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
 " VCS
 Plug 'tpope/vim-fugitive'
@@ -58,7 +60,7 @@ Plug 'chriskempson/base16-vim'
 " Unite
 Plug 'hashivim/vim-hashicorp-tools'
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-
+Plug 'christoomey/vim-tmux-navigator'
 " Required
 call plug#end()
 
@@ -142,6 +144,7 @@ set nocursorcolumn              " Do not highlight column (speeds up highlightin
 set nocursorline                " Do not highlight cursor (speeds up highlighting)
 set lazyredraw                  " Wait to redraw
 
+set guifont=Fira\ Code:h12
 " Enable to copy to clipboard for operations like yank, delete, change and put
 " http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
 if has('unnamedplus')
@@ -160,7 +163,7 @@ endif
 " Colorscheme
 if has("gui_macvim")
   " No toolbars, menu or scrollbars in the GUI
-  set guifont=Source\ Code\ Pro:h13
+  set macligatures
   set clipboard+=unnamed
   set vb t_vb=
   set guioptions-=m  "no menu
@@ -172,18 +175,6 @@ if has("gui_macvim")
 
   let macvim_skip_colorscheme=1
   colorscheme molokai
-
-  " Open goto symbol on current buffer
-  nmap <D-r> :MyCtrlPTag<cr>
-  imap <D-r> <esc>:MyCtrlPTag<cr>
-
-  " Open goto symbol on all buffers
-  nmap <D-R> :CtrlPBufTagAll<cr>
-  imap <D-R> <esc>:CtrlPBufTagAll<cr>
-
-  " Open goto file
-  nmap <D-t> :CtrlP<cr>
-  imap <D-t> <esc>:CtrlP<cr>
 
   " Indent lines with cmd+[ and cmd+]
   nmap <D-]> >>
@@ -378,9 +369,6 @@ map <C-l> <C-W>l
 " Print full path
 map <C-f> :echo expand("%:p")<cr>
 
-" Source (reload configuration)
-nnoremap <silent> <F5> :source $MYNVIMRC<CR>
-
 nnoremap <F6> :setlocal spell! spell?<CR>
 
 " Search mappings: These will make it so that going to the next one in a
@@ -462,8 +450,6 @@ let g:python3_host_skip_check = 1
 " let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 " Use Newcomplete
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'zchee/deoplete-go', { 'do': 'make'}
 "Note: This option must be set in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -536,7 +522,7 @@ endif
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 " vim-go
-let g:go_bin_path = expand("~/dev/go/bin")
+let g:go_bin_path = expand("~/bin")
 let g:go_autodetect_gopath = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
@@ -563,7 +549,7 @@ let g:go_decls_includes = "func,type"
 
 let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
 
-let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+let g:go_metalinter_enabled = ['vet', 'golint']
 let g:go_metalinter_autosave = 1
 let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 let g:go_metalinter_deadline = "5s"
@@ -616,39 +602,10 @@ endfunction
 let s:tlist_def_go_settings = 'go;g:enum;s:struct;u:union;t:type;' .
                            \ 'v:variable;f:function'
 
-" ==================== CtrlP ====================
-let g:ctrlp_cmd = 'CtrlPMRU'
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_switch_buffer = 'et'  " jump to a file if it's open already
-let g:ctrlp_mruf_max=450    " number of recently opened files
-let g:ctrlp_max_files=0     " do not limit the number of searchable files
-let g:ctrlp_use_caching = 1
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
-let g:ctrlp_match_window = 'bottom,order:btt,max:10,results:10'
-let g:ctrlp_buftag_types = {'go' : '--language-force=go --golang-types=ftv'}
-
-func! MyCtrlPTag()
-  let g:ctrlp_prompt_mappings = {
-        \ 'AcceptSelection("e")': ['<cr>', '<2-LeftMouse>'],
-        \ 'AcceptSelection("t")': ['<c-t>'],
-        \ }
-  CtrlPBufTag
-endfunc
-command! MyCtrlPTag call MyCtrlPTag()
-
-
-nmap <C-b> :CtrlPCurWD<cr>
-imap <C-b> <esc>:CtrlPCurWD<cr>
-
-" DelimitMate
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_expand_space = 1    
-let g:delimitMate_smart_quotes = 1    
-let g:delimitMate_expand_inside_quotes = 0    
-let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'   
-
-imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
+" ==================== FZF ====================
+"
+:nmap ,t :FZF<CR>
+set rtp+=/usr/local/opt/fzf
 
 " ==================== Lightline ====================
 "
@@ -790,11 +747,6 @@ let g:unite_source_grep_default_opts =
     \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
 let g:unite_source_grep_recursive_opt = ''
 endif
-
-augroup myvimrc
-    au!
-    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
-augroup END
 """"""""""
 "" markdown
 let g:vim_markdown_folding_disabled=1

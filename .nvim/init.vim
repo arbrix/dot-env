@@ -1,1 +1,0 @@
-/Users/arbrix/.arb-dot/.neovimrc
