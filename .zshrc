@@ -44,6 +44,10 @@ export GREP_OPTIONS='--color=auto'
 export GOPATH=$HOME
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
+export PATH=$PATH:/usr/local/opt/go/libexec/bin
+
+# VIM
+export VIM=/usr/local/bin/vim
 
 # =============
 #    HISTORY

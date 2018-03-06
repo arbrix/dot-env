@@ -1,18 +1,36 @@
- " Note: Skip initialization for vim-tiny or vim-small.
- if 0 | endif
-
-let g:make = 'gmake'
-if system('uname -o') =~ '^GNU/'
-        let g:make = 'make'
+"*****************************************************************************
+"" Vim-PLug core
+"*****************************************************************************
+if has('vim_starting')
+  set nocompatible               " Be iMproved
 endif
 
-" Add or remove your Bundles here:
-call plug#begin()
+let vimplug_exists=expand('~/.vim/autoload/plug.vim')
+
+let g:vim_bootstrap_langs = ""
+let g:vim_bootstrap_editor = "vim"				" nvim or vim
+
+if !filereadable(vimplug_exists)
+  if !executable("curl")
+    echoerr "You have to install curl or first install vim-plug yourself!"
+    execute "q!"
+  endif
+  echo "Installing Vim-Plug..."
+  echo ""
+  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  let g:not_finish_vimplug = "yes"
+
+  autocmd VimEnter * PlugInstall
+endif
+
+" Required:
+call plug#begin(expand('~/.vim/plugged'))
 
 " UI
 Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-repeat'
 Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
 Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'majutsushi/tagbar'
@@ -27,7 +45,6 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-hclfmt'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
-Plug 'w0rp/ale'
 
 " Text editing
 Plug 'Raimondi/delimitMate'
@@ -37,15 +54,31 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'unblevable/quick-scope'
 Plug 'buoto/gotests-vim'
+Plug 'vim-scripts/grep.vim'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'scrooloose/syntastic'
+Plug 'Yggdroot/indentLine'
+Plug 'sheerun/vim-polyglot'
 
 " Completion
 Plug 'Shougo/neocomplete.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+if isdirectory('/usr/local/opt/fzf')
+  Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
+else
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+  Plug 'junegunn/fzf.vim'
+endif
+let g:make = 'gmake'
+if exists('make')
+        let g:make = 'make'
+endif
+Plug 'Shougo/vimproc.vim', {'do': g:make}
 
 " VCS
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 " Color themes
 Plug 'fatih/badwolf'
@@ -79,12 +112,16 @@ if !has('nvim')
 
   set laststatus=2
   set encoding=utf-8              " Set default encoding to UTF-8
+  set fileencoding=utf-8
+  set fileencodings=utf-8
+  set bomb
+  set binary
   set autoread                    " Automatically reread changed files without asking me anything
-  set autoindent                  
+  set autoindent
   set backspace=indent,eol,start  " Makes backspace key more powerful.
   set incsearch                   " Shows the match while typing
   set hlsearch                    " Highlight found searches
-  set mouse=a      
+  set mouse=a
 endif
 
 set autowrite
@@ -108,22 +145,22 @@ set noswapfile
 set smarttab
 set shiftwidth=4
 set tabstop=4
-set softtabstop=4
+set softtabstop=0
 set expandtab
 
 set si "Smart indent
 set wrap "Wrap lines
 
-set textwidth=79
+set textwidth=119
 set formatoptions=qrn1
-set colorcolumn=80
+set colorcolumn=120
 set foldenable
 
 set list
 set listchars=tab:│\ ,eol:¬
 
 set backspace=2
-"Invisible character colors 
+"Invisible character colors
 highlight NonText guifg=#4a4a59
 highlight SpecialKey guifg=#4a4a59
 
@@ -174,7 +211,8 @@ if has("gui_macvim")
   set guioptions-=R
 
   let macvim_skip_colorscheme=1
-  colorscheme molokai
+  colorscheme onedark
+  let g:onedark_termcolors=256
 
   " Indent lines with cmd+[ and cmd+]
   nmap <D-]> >>
@@ -217,9 +255,8 @@ else
   endif
 
   let g:rehash256 = 1
-  set background=dark
-  let g:molokai_original = 1
-  colorscheme molokai
+  colorscheme onedark
+  let g:onedark_termcolors=256
 endif
 
 set mouse=a
@@ -449,6 +486,12 @@ let g:python3_host_skip_check = 1
 " let g:deoplete#sources#go#align_class = 1
 " let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
+" grep.vim
+nnoremap <silent> <leader>f :Rgrep<CR>
+let Grep_Default_Options = '-IR'
+let Grep_Skip_Files = '*.log *.db'
+let Grep_Skip_Dirs = '.git node_modules'
+
 " Use Newcomplete
 "Note: This option must be set in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
 " Disable AutoComplPop.
@@ -524,6 +567,9 @@ let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 " vim-go
 let g:go_bin_path = expand("~/bin")
 let g:go_autodetect_gopath = 1
+let g:go_highlight_types = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
@@ -533,7 +579,7 @@ let g:go_highlight_build_constraints = 1
 let g:go_list_type = "quickfix"
 " Enable goimports to automatically insert import paths instead of gofmt:
 let g:go_fmt_command = "goimports"
-let g:go_snippet_case_type = "camelcase"
+let g:go_snippet_case_type = "snake_case"
 " By default vim-go shows errors for the fmt command, to disable it:
 let g:go_fmt_fail_silently = 1
 let g:go_imports_fail_silently = 1
@@ -544,6 +590,7 @@ let g:go_term_mode = "split"
 " By default the testing commands run asynchronously in the background and display results with go#jobcontrol#Statusline().
 let g:go_term_enabled = 1
 let g:go_auto_type_info = 1 " automatically show the information whenever you move your cursor
+let g:go_auto_sameids = 1
 let g:go_def_mode = 'godef'
 let g:go_decls_includes = "func,type"
 
@@ -604,12 +651,13 @@ let s:tlist_def_go_settings = 'go;g:enum;s:struct;u:union;t:type;' .
 
 " ==================== FZF ====================
 "
-:nmap ,t :FZF<CR>
+:nmap <leader>t :FZF<CR>
 set rtp+=/usr/local/opt/fzf
 
 " ==================== Lightline ====================
 "
 let g:lightline = {
+      \ 'colorscheme': 'onedark',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste'],
       \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark', 'go'] ],
@@ -727,26 +775,63 @@ function! CtrlPStatusFunc_2(str)
   return lightline#statusline(0)
 endfunction
 
-" YouConpleteMe
-let g:ycm_python_binary_path = '/usr/local/bin/python'
+cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <silent> <leader>b :Buffers<CR>
+nnoremap <silent> <leader>e :FZF -m<CR>
 
-" UltiSnips
-let g:UltiSnipsExpandTrigger='<c-j>'
-let g:UltiSnipsJumpForwardTrigger='<c-j>'
-let g:UltiSnipsJumpBackwardTrigger='<c-k>'
+" snippets
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+let g:UltiSnipsEditSplit="vertical"
+
+" syntastic
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
+let g:syntastic_style_error_symbol = '✗'
+let g:syntastic_style_warning_symbol = '⚠'
+let g:syntastic_auto_loc_list=1
+let g:syntastic_aggregate_errors = 1
+
+" Tagbar
+nmap <silent> <F4> :TagbarToggle<CR>
+let g:tagbar_autofocus = 1
+
+" Disable visualbell
+set noerrorbells visualbell t_vb=
+if has('autocmd')
+  autocmd GUIEnter * set visualbell t_vb=
+endif
+
+"" Copy/Paste/Cut
+if has('unnamedplus')
+  set clipboard=unnamed,unnamedplus
+endif
 
 " UNITE
 nmap <silent> <Leader>ut :Unite buffer -auto-resize -start-insert<CR>
 nmap <silent> <Leader>up :Unite file_rec/async -start-insert<CR>
 nmap <silent> <Leader>faf :Unite grep:.: -no-quit -direction="bottom"<CR>
 
+"" fzf.vim
+set wildmode=list:longest,list:full
+set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,__pycache__
+let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
+
+" The Silver Searcher
 if executable('ag')
-let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts =
-    \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
-    \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
-let g:unite_source_grep_recursive_opt = ''
+  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
+  set grepprg=ag\ --nogroup\ --nocolor
 endif
+
+" ripgrep
+if executable('rg')
+  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
+  set grepprg=rg\ --vimgrep
+  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+endif
+
 """"""""""
 "" markdown
 let g:vim_markdown_folding_disabled=1

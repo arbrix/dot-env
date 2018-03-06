@@ -116,7 +116,7 @@
 [core]
   autocrlf = false
   editor = nvim
-  excludesfile = ~/.gitignore-global
+  excludesfile = ~/.gitignore
 
 [advice]
   statusHints = false
@@ -142,5 +142,3 @@
 [credential]
 	helper = store
 [credential "https://github.com"]
-[url "gh:"]
-	insteadOf = https://github.com/
