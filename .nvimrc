@@ -9,6 +9,8 @@ endif
 
 let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
 
+set runtimepath+=/usr/share/vim/vim80
+
 let g:vim_bootstrap_langs = "go"
 let g:vim_bootstrap_editor = "nvim"				" nvim or vim
 
@@ -38,7 +40,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-scripts/grep.vim'
-Plug 'vim-scripts/CSApprox'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
@@ -76,6 +77,7 @@ Plug 'honza/vim-snippets'
 "" Color
 Plug 'tomasr/molokai'
 Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
 
 "*****************************************************************************
 "" Custom bundles
@@ -187,9 +189,10 @@ set ruler
 set number
 
 let no_buffers_menu=1
-if !exists('g:not_finish_vimplug')
-  colorscheme onedark
-endif
+
+colorscheme one
+set background=dark
+let g:onedark_termcolors=256
 
 set mousemodel=popup
 set t_Co=256
@@ -209,7 +212,6 @@ else
   let g:indentLine_concealcursor = 0
   let g:indentLine_char = '┆'
   let g:indentLine_faster = 1
-  
 endif
 
 "" Disable the blinking cursor.
@@ -579,7 +581,7 @@ endif
 " ==================== Lightline ====================
 "
 let g:lightline = {
-      \ 'colorscheme': 'onedark',
+      \ 'colorscheme': 'one',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste'],
       \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark', 'go'] ],

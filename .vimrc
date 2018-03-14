@@ -7,6 +7,8 @@ endif
 
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
+set runtimepath+=/usr/share/vim/vim80
+
 let g:vim_bootstrap_langs = ""
 let g:vim_bootstrap_editor = "vim"				" nvim or vim
 
@@ -81,10 +83,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 " Color themes
-Plug 'fatih/badwolf'
+Plug 'rakr/vim-one'
 Plug 'w0ng/vim-hybrid'
 Plug 'altercation/vim-colors-solarized'
-Plug 'zenorocha/dracula-theme', {'rtp': 'vim/'}
 Plug 'fatih/molokai'
 Plug 'joshdick/onedark.vim'
 Plug 'mkarmona/colorsbox'
@@ -101,33 +102,27 @@ call plug#end()
 "      Settings      "
 """"""""""""""""""""""
 " Vim usable again (these are default on NeoVim)
-if !has('nvim')
-  set nocompatible
-  filetype off
-  filetype plugin indent on
+filetype off
+filetype plugin indent on
 
-  set ttyfast
-  set ttymouse=xterm2
-  set ttyscroll=3
+set ttyfast
+set ttymouse=xterm2
+set ttyscroll=3
 
-  set laststatus=2
-  set encoding=utf-8              " Set default encoding to UTF-8
-  set fileencoding=utf-8
-  set fileencodings=utf-8
-  set bomb
-  set binary
-  set autoread                    " Automatically reread changed files without asking me anything
-  set autoindent
-  set backspace=indent,eol,start  " Makes backspace key more powerful.
-  set incsearch                   " Shows the match while typing
-  set hlsearch                    " Highlight found searches
-  set mouse=a
-endif
-
-set autowrite
-set autoread                    " Automatically read changed files
+set laststatus=2
+set encoding=utf-8              " Set default encoding to UTF-8
+set fileencoding=utf-8
+set fileencodings=utf-8
+set bomb
+set binary
+set autoread                    " Automatically reread changed files without asking me anything
+set autoindent
+set backspace=indent,eol,start  " Makes backspace key more powerful.
 set incsearch                   " Shows the match while typing
 set hlsearch                    " Highlight found searches
+set mouse=a
+
+set autowrite
 set noerrorbells                " No beeps
 set relativenumber
 set showcmd
@@ -159,7 +154,6 @@ set foldenable
 set list
 set listchars=tab:│\ ,eol:¬
 
-set backspace=2
 "Invisible character colors
 highlight NonText guifg=#4a4a59
 highlight SpecialKey guifg=#4a4a59
@@ -210,9 +204,7 @@ if has("gui_macvim")
   set guioptions-=r  "no scrollbar
   set guioptions-=R
 
-  let macvim_skip_colorscheme=1
-  colorscheme onedark
-  let g:onedark_termcolors=256
+"  let macvim_skip_colorscheme=1
 
   " Indent lines with cmd+[ and cmd+]
   nmap <D-]> >>
@@ -254,12 +246,12 @@ else
     set term=ansi
   endif
 
-  let g:rehash256 = 1
-  colorscheme onedark
-  let g:onedark_termcolors=256
+"  let g:rehash256 = 1
 endif
 
-set mouse=a
+colorscheme one
+set background=dark
+
 set modelines=0
 
 set wildmenu
@@ -268,9 +260,7 @@ set wildmode=list:longest
 " Vim wide ignore files
 set wildignore=*.swp,*.bak,.DS_Store
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite,.DS_Store,*/.git,*.bak
-set shell=/bin/sh
-" set ruler
-set backspace=indent,eol,start
+set shell=/bin/zsh
 " set undofile
 hi vertsplit guifg=fg guibg=bg
 
@@ -278,7 +268,7 @@ hi vertsplit guifg=fg guibg=bg
 command! -nargs=* -complete=help Help vertical belowright help <args>
 autocmd FileType help wincmd L
 
-autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
+autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
 autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
 autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
@@ -657,12 +647,12 @@ set rtp+=/usr/local/opt/fzf
 " ==================== Lightline ====================
 "
 let g:lightline = {
-      \ 'colorscheme': 'onedark',
+      \ 'colorscheme': 'one',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste'],
       \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark', 'go'] ],
-      \   'right': [ [ 'lineinfo' ], 
-      \              [ 'percent' ], 
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ],
       \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component': {
