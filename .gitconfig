@@ -95,14 +95,14 @@
 
 [mergetool]
   prompt = false
-[mergetool "mvimdiff"]
-  cmd="mvim -c 'Gdiff' $MERGED"     # use fugitive.vim for 3-way merge
+[mergetool "vimdiff"]
+  cmd="vim -c 'Gdiff' $MERGED"     # use fugitive.vim for 3-way merge
   keepbackup=false
 
 [merge]
   summary = true
   verbosity = 1
-  tool = mvimdiff
+  tool = vimdiff
 
 [apply]
   whitespace = nowarn
@@ -137,7 +137,7 @@
 [user]
 	user = arbrix
 	name = Ivan Kutuzov 
-	email = arbrix@gmail.com
+	email = ikut@softserveinc.com
 
 [credential]
 	helper = store

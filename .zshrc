@@ -47,7 +47,7 @@ export PATH=$PATH:$GOBIN
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
 # VIM
-export VIM=/usr/local/bin/vim
+export VIM=/usr/local/share/vim/vim80
 
 # =============
 #    HISTORY

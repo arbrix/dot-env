@@ -239,18 +239,17 @@ if has("gui_macvim")
   imap <D-7> <esc>7gt
   imap <D-8> <esc>8gt
   imap <D-9> <esc>9gt
-else
-  if has('!nvim')
-    syntax enable
-    set t_Co=256
-    set term=ansi
-  endif
-
-"  let g:rehash256 = 1
 endif
 
-colorscheme one
+set term=builtin_ansi
+set t_Co=256
+syntax on
+let g:solarized_termtrans = 1
+let g:solarized_termcolors=256
+let g:solarized_visibility = "normal"
+let g:solarized_contrast = "normal"
 set background=dark
+colorscheme solarized
 
 set modelines=0
 

@@ -190,12 +190,12 @@ set number
 
 let no_buffers_menu=1
 
-colorscheme one
-set background=dark
+set t_Co=256
 let g:onedark_termcolors=256
+set background=dark
+colorscheme one
 
 set mousemodel=popup
-set t_Co=256
 set guioptions=egmrti
 set gfn=Fira\ Code:h12
 
