@@ -1,16 +1,12 @@
 "*****************************************************************************
 "" Vim-PLug core
 "*****************************************************************************
-if has('vim_starting')
-  set nocompatible               " Be iMproved
-endif
+set nocompatible               " Be iMproved
 
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
-set runtimepath+=/usr/share/vim/vim80
-
 let g:vim_bootstrap_langs = ""
-let g:vim_bootstrap_editor = "vim"				" nvim or vim
+let g:vim_bootstrap_editor = "vim" " nvim or vim
 
 if !filereadable(vimplug_exists)
   if !executable("curl")
@@ -31,10 +27,6 @@ call plug#begin(expand('~/.vim/plugged'))
 " UI
 Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-repeat'
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'corylanou/vim-present', {'for' : 'present'}
-Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'majutsushi/tagbar'
 
 " Misc
@@ -44,9 +36,7 @@ Plug 't9md/vim-choosewin' " Land on window you chose like tmux's 'display-pane'
 " Languages
 Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-hclfmt'
-Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 
 " Text editing
 Plug 'Raimondi/delimitMate'
@@ -63,7 +53,6 @@ Plug 'Yggdroot/indentLine'
 Plug 'sheerun/vim-polyglot'
 
 " Completion
-Plug 'Shougo/neocomplete.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 if isdirectory('/usr/local/opt/fzf')
@@ -92,7 +81,6 @@ Plug 'mkarmona/colorsbox'
 Plug 'chriskempson/base16-vim'
 
 " Unite
-Plug 'hashivim/vim-hashicorp-tools'
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 Plug 'christoomey/vim-tmux-navigator'
 " Required
@@ -833,7 +821,7 @@ let g:javascript_enable_domhtmlcss = 1
 " ==================== NerdTree ====================
 " For toggling
 noremap <Leader>n :NERDTreeToggle<cr>
-noremap <Leader>f :NERDTreeFind<cr>
+noremap <Leader>F :NERDTreeFind<cr>
 
 let NERDTreeShowHidden=1
 
