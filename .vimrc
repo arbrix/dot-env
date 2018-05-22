@@ -1,60 +1,29 @@
-"*****************************************************************************
-"" Vim-PLug core
-"*****************************************************************************
-set nocompatible               " Be iMproved
-
-let vimplug_exists=expand('~/.vim/autoload/plug.vim')
-
-let g:vim_bootstrap_langs = ""
-let g:vim_bootstrap_editor = "vim" " nvim or vim
-
-if !filereadable(vimplug_exists)
-  if !executable("curl")
-    echoerr "You have to install curl or first install vim-plug yourself!"
-    execute "q!"
-  endif
-  echo "Installing Vim-Plug..."
-  echo ""
-  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  let g:not_finish_vimplug = "yes"
-
-  autocmd VimEnter * PlugInstall
-endif
-
-" Required:
 call plug#begin(expand('~/.vim/plugged'))
-
 " UI
 Plug 'itchyny/lightline.vim'
-Plug 'tpope/vim-repeat'
-Plug 'majutsushi/tagbar'
+Plug 'godlygeek/tabular'
 
 " Misc
 Plug 'ConradIrwin/vim-bracketed-paste' " enables transparent pasting into vim. (i.e. no more :set paste!)
 Plug 't9md/vim-choosewin' " Land on window you chose like tmux's 'display-pane'
+Plug 'mileszs/ack.vim'
+Plug 'plasticboy/vim-markdown'
+Plug 'scrooloose/nerdtree'
 
 " Languages
 Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'fatih/vim-hclfmt'
+Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 
 " Text editing
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
-Plug 'unblevable/quick-scope'
-Plug 'buoto/gotests-vim'
-Plug 'vim-scripts/grep.vim'
-Plug 'bronson/vim-trailing-whitespace'
-Plug 'scrooloose/syntastic'
-Plug 'Yggdroot/indentLine'
-Plug 'sheerun/vim-polyglot'
 
 " Completion
 Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 else
@@ -65,35 +34,30 @@ let g:make = 'gmake'
 if exists('make')
         let g:make = 'make'
 endif
-Plug 'Shougo/vimproc.vim', {'do': g:make}
 
 " VCS
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
 
 " Color themes
 Plug 'rakr/vim-one'
-Plug 'w0ng/vim-hybrid'
 Plug 'altercation/vim-colors-solarized'
 Plug 'fatih/molokai'
 Plug 'joshdick/onedark.vim'
-Plug 'mkarmona/colorsbox'
-Plug 'chriskempson/base16-vim'
 
 " Unite
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-Plug 'christoomey/vim-tmux-navigator'
 " Required
 call plug#end()
 
 """"""""""""""""""""""
 "      Settings      "
 """"""""""""""""""""""
-" Vim usable again (these are default on NeoVim)
+set nocompatible
 filetype off
 filetype plugin indent on
 
 set ttyfast
+
 set ttymouse=xterm2
 set ttyscroll=3
 
@@ -101,6 +65,7 @@ set laststatus=2
 set encoding=utf-8              " Set default encoding to UTF-8
 set fileencoding=utf-8
 set fileencodings=utf-8
+
 set bomb
 set binary
 set autoread                    " Automatically reread changed files without asking me anything
@@ -158,9 +123,10 @@ set ignorecase                  " Search case insensitive...
 set smartcase                   " ... but not it begins with upper case
 set completeopt=menu,menuone    " Show popup menu, even if there is one entry
 set pumheight=10                " Completion window max size
-set updatetime=400
+set updatetime=300
 set nocursorcolumn              " Do not highlight column (speeds up highlighting)
 set nocursorline                " Do not highlight cursor (speeds up highlighting)
+set conceallevel=2           " Concealed text is completely hidden
 set lazyredraw                  " Wait to redraw
 
 set guifont=Fira\ Code:h12
@@ -176,59 +142,10 @@ set viminfo='200
 " This enables us to undo files even if you exit Vim.
 if has('persistent_undo')
   set undofile
-  set undodir=~/.config/vim/tmp/undo/
+  set undodir=~/.cache/vim
 endif
 
 " Colorscheme
-if has("gui_macvim")
-  " No toolbars, menu or scrollbars in the GUI
-  set macligatures
-  set clipboard+=unnamed
-  set vb t_vb=
-  set guioptions-=m  "no menu
-  set guioptions-=T  "no toolbar
-  set guioptions-=l
-  set guioptions-=L
-  set guioptions-=r  "no scrollbar
-  set guioptions-=R
-
-"  let macvim_skip_colorscheme=1
-
-  " Indent lines with cmd+[ and cmd+]
-  nmap <D-]> >>
-  nmap <D-[> <<
-  vmap <D-[> <gv
-  vmap <D-]> >gv
-
-  " This mapping makes Ctrl-Tab switch between tabs.
-  " Ctrl-Shift-Tab goes the other way.
-  noremap <C-Tab> :tabnext<CR>
-  noremap <C-S-Tab> :tabprev<CR>
-
-  " switch between tabs with cmd+1, cmd+2,..."
-  map <D-1> 1gt
-  map <D-2> 2gt
-  map <D-3> 3gt
-  map <D-4> 4gt
-  map <D-5> 5gt
-  map <D-6> 6gt
-  map <D-7> 7gt
-  map <D-8> 8gt
-  map <D-9> 9gt
-
-  " until we have default MacVim shortcuts this is the only way to use it in
-  " insert mode
-  imap <D-1> <esc>1gt
-  imap <D-2> <esc>2gt
-  imap <D-3> <esc>3gt
-  imap <D-4> <esc>4gt
-  imap <D-5> <esc>5gt
-  imap <D-6> <esc>6gt
-  imap <D-7> <esc>7gt
-  imap <D-8> <esc>8gt
-  imap <D-9> <esc>9gt
-endif
-
 set term=builtin_ansi
 set t_Co=256
 syntax on
@@ -251,25 +168,113 @@ set shell=/bin/zsh
 " set undofile
 hi vertsplit guifg=fg guibg=bg
 
-" open help vertically
-command! -nargs=* -complete=help Help vertical belowright help <args>
-autocmd FileType help wincmd L
-
-autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
-autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
-autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
-autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
-autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
-autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
-
-autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
-autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
-
 augroup filetypedetect
+  command! -nargs=* -complete=help Help vertical belowright help <args>
+  autocmd FileType help wincmd L
+  
   autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
   autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
   autocmd BufNewFile,BufRead *.hcl setf conf
+  autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
+  
+  autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
+  autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
+  autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
+  autocmd BufNewFile,BufRead *.html setlocal noet ts=4 sw=4
+  autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd BufNewFile,BufRead *.sh setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd BufNewFile,BufRead *.proto setlocal expandtab shiftwidth=2 tabstop=2
+  
+  autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
 augroup END
+
+"=====================================================
+"===================== STATUSLINE ====================
+
+let s:modes = {
+      \ 'n': 'NORMAL', 
+      \ 'i': 'INSERT', 
+      \ 'R': 'REPLACE', 
+      \ 'v': 'VISUAL', 
+      \ 'V': 'V-LINE', 
+      \ "\<C-v>": 'V-BLOCK',
+      \ 'c': 'COMMAND',
+      \ 's': 'SELECT', 
+      \ 'S': 'S-LINE', 
+      \ "\<C-s>": 'S-BLOCK', 
+      \ 't': 'TERMINAL'
+      \}
+
+let s:prev_mode = ""
+function! StatusLineMode()
+  let cur_mode = get(s:modes, mode(), '')
+
+  " do not update higlight if the mode is the same
+  if cur_mode == s:prev_mode
+    return cur_mode
+  endif
+
+  if cur_mode == "NORMAL"
+    exe 'hi! StatusLine ctermfg=236'
+    exe 'hi! myModeColor cterm=bold ctermbg=148 ctermfg=22'
+  elseif cur_mode == "INSERT"
+    exe 'hi! myModeColor cterm=bold ctermbg=23 ctermfg=231'
+  elseif cur_mode == "VISUAL" || cur_mode == "V-LINE" || cur_mode == "V_BLOCK"
+    exe 'hi! StatusLine ctermfg=236'
+    exe 'hi! myModeColor cterm=bold ctermbg=208 ctermfg=88'
+  endif
+
+  let s:prev_mode = cur_mode
+  return cur_mode
+endfunction
+
+function! StatusLineFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! StatusLinePercent()
+  return (100 * line('.') / line('$')) . '%'
+endfunction
+
+function! StatusLineLeftInfo()
+ let branch = fugitive#head()
+ let filename = '' != expand('%:t') ? expand('%:t') : '[No Name]'
+ if branch !=# ''
+   return printf("%s | %s", branch, filename)
+ endif
+ return filename
+endfunction
+
+exe 'hi! myInfoColor ctermbg=240 ctermfg=252'
+
+" start building our statusline
+set statusline=
+
+" mode with custom colors
+set statusline+=%#myModeColor#
+set statusline+=%{StatusLineMode()}
+set statusline+=%*
+
+" left information bar (after mode)
+set statusline+=%#myInfoColor#
+set statusline+=\ %{StatusLineLeftInfo()}
+set statusline+=\ %*
+
+" go command status (requires vim-go)
+set statusline+=%#goStatuslineColor#
+set statusline+=%{go#statusline#Show()}
+set statusline+=%*
+
+" right section seperator
+set statusline+=%=
+
+" filetype, percentage, line number and column number
+set statusline+=%#myInfoColor#
+set statusline+=\ %{StatusLineFiletype()}\ %{StatusLinePercent()}\ %l:%v
+set statusline+=\ %*
+
 
 """"""""""""""""""""""
 "      Mappings      "
@@ -277,11 +282,54 @@ augroup END
 
 let mapleader = ","
 
+" Some useful quickfix shortcuts for quickfix
+map <C-n> :cn<CR>
+map <C-m> :cp<CR>
+nnoremap <leader>a :cclose<CR>
+
+" put quickfix window always to the bottom
+augroup quickfix
+    autocmd!
+    autocmd FileType qf wincmd J
+    autocmd FileType qf setlocal wrap
+augroup END
+
+" Enter automatically into the files directory
+autocmd BufEnter * silent! lcd %:p:h
+
+" Automatically resize screens to be equally the same
+" autocmd VimResized * wincmd =
+
+" Fast saving
+nnoremap <leader>w :w!<cr>
+nnoremap <silent> <leader>q :q!<CR>
+
+" Center the screen
+nnoremap <space> zz
+
+" Remove search highlight
+" nnoremap <leader><space> :nohlsearch<CR>
+function! s:clear_highlight()
+  let @/ = ""
+  call go#guru#ClearSameIds()
+endfunction
+nnoremap <silent> <leader><space> :<C-u>call <SID>clear_highlight()<CR>
+
+" Source the current Vim file
+nnoremap <leader>pr :Runtime<CR>
+
+" Close all but the current one
+nnoremap <leader>o :only<CR>
+
+" Better split switching
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
 nnoremap / /\v
 vnoremap / /\v
 nnoremap <leader><space> :noh<cr>
-
-nmap <leader>w :w!<cr>
 
 " Disabling arrow keys. Use hjkl, Luke!
 nnoremap <up> <nop>
@@ -296,11 +344,6 @@ inoremap <right> <nop>
 " Get efficient: shortcut mappings
 nnoremap ; :
 
-" Better buffer search
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
-
 " Move selected text around
 vnoremap J :m '>+1<CR>gv
 vnoremap K :m '<-2<CR>gv
@@ -312,20 +355,66 @@ vmap > >gv
 " Map jk to <Esc>
 imap jk <Esc>
 
-" easier to jump between errors in quickfix list
-map <C-n> :cnext<CR>
-map <C-m> :cprevious<CR>
-nnoremap <leader>a :cclose<CR>
+" Print full path
+map <C-f> :echo expand("%:p")<cr>
 
-" put quickfix window always to the bottom
-autocmd FileType qf wincmd J
+" Terminal settings
+if has('terminal')
+  " Kill job and close terminal window
+  tnoremap <Leader>q <C-w><C-C><C-w>c<cr>
 
-" Fast saving
-nnoremap <leader>w :w!<cr>
-nnoremap <silent> <leader>q :q!<CR>
+  " switch to normal mode with esc
+  tnoremap <Esc> <C-W>N
 
-" Center the screen
-nnoremap <space> zz
+  " mappings to move out from terminal to other views
+  tnoremap <C-h> <C-w>h
+  tnoremap <C-j> <C-w>j
+  tnoremap <C-k> <C-w>k
+  tnoremap <C-l> <C-w>l
+ 
+  " Open terminal in vertical, horizontal and new tab
+  nnoremap <leader>tv :vsplit<cr>:term ++curwin<CR>
+  nnoremap <leader>ts :split<cr>:term ++curwin<CR>
+  nnoremap <leader>tt :tabnew<cr>:term ++curwin<CR>
+
+  tnoremap <leader>tv <C-w>:vsplit<cr>:term ++curwin<CR>
+  tnoremap <leader>ts <C-w>:split<cr>:term ++curwin<CR>
+  tnoremap <leader>tt <C-w>:tabnew<cr>:term ++curwin<CR>
+
+  " always start terminal in insert mode when I switch to it
+  " NOTE(arslan): startinsert doesn't work in Terminal-normal mode.
+  " autocmd WinEnter * if &buftype == 'terminal' | call feedkeys("i") | endif
+endif
+
+" Source (reload configuration)
+nnoremap <silent> <F5> :source $MYNVIMRC<CR>
+
+nnoremap <F6> :setlocal spell! spell?<CR>
+
+" Search mappings: These will make it so that going to the next one in a
+" search will center on the line it's found in.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Same when moving up and down
+noremap <C-d> <C-d>zz
+noremap <C-u> <C-u>zz
+
+" Remap H and L (top, bottom of screen to left and right end of line)
+nnoremap H ^
+nnoremap L $
+vnoremap H ^
+vnoremap L g_
+
+" Act like D and C
+nnoremap Y y$
+
+" Do not show stupid q: window
+map q: :q
+
+" Don't move on * I'd use a function for this but Vim clobbers the last search
+" when you're in a function so fuck it, practicality beats purity.
+nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
 
 """"""""""
 " Split window
@@ -344,9 +433,6 @@ nnoremap <leader>. :lcd %:p:h<CR>
 noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 " Opens a tab edit command with the path of the currently edited file filled
 noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
-
-" Act like D and C
-nnoremap Y y$
 
 " Enter automatically into the files directory
 autocmd BufEnter * silent! lcd %:p:h
@@ -382,24 +468,6 @@ map <C-l> <C-W>l
 
 " Print full path
 map <C-f> :echo expand("%:p")<cr>
-
-nnoremap <F6> :setlocal spell! spell?<CR>
-
-" Search mappings: These will make it so that going to the next one in a
-" search will center on the line it's found in.
-nnoremap n nzzzv
-nnoremap N Nzzzv
-
-" Same when moving up and down
-noremap <C-d> <C-d>zz
-noremap <C-u> <C-u>zz
-
-" Remap H and L (top, bottom of screen to left and right end of line)
-nnoremap H ^
-nnoremap L $
-vnoremap H ^
-vnoremap L g_
-
 
 " Enter automatically into the files directory
 autocmd BufEnter * silent! lcd %:p:h
@@ -450,7 +518,6 @@ nnoremap <leader>ui :<C-u>call <SID>create_go_doc_comment()<CR>
 vnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gb :Gblame<CR>
 
-
 " Path to python interpreter for neovim
 let g:python_host_prog  = '/usr/local/bin/python'
 let g:python3_host_prog  = '/usr/local/bin/python3'
@@ -458,88 +525,11 @@ let g:loaded_python_provider = 1
 " Skip the check of neovim module
 let g:python3_host_skip_check = 1
 
-" Use deoplete.
-" let g:deoplete#enable_at_startup = 1
-" let g:deoplete#sources#go#align_class = 1
-" let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-
 " grep.vim
 nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
-
-" Use Newcomplete
-"Note: This option must be set in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 " vim-go
 let g:go_bin_path = expand("~/bin")
@@ -556,6 +546,16 @@ let g:go_highlight_build_constraints = 1
 let g:go_list_type = "quickfix"
 " Enable goimports to automatically insert import paths instead of gofmt:
 let g:go_fmt_command = "goimports"
+
+let g:go_fmt_options = {
+  \ 'goimports': '-local do/',
+  \ }
+
+let g:go_debug_windows = {
+      \ 'vars':  'leftabove 35vnew',
+      \ 'stack': 'botright 10new',
+\ }
+
 let g:go_snippet_case_type = "snake_case"
 " By default vim-go shows errors for the fmt command, to disable it:
 let g:go_fmt_fail_silently = 1
@@ -582,248 +582,91 @@ let g:go_metalinter_deadline = "5s"
 nmap <C-g> :GoDeclsDir<cr>
 imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
 
+" run :GoBuild or :GoTestCompile based on the go file
+function! s:build_go_files()
+  let l:file = expand('%')
+  if l:file =~# '^\f\+_test\.go$'
+    call go#test#Test(0, 1)
+  elseif l:file =~# '^\f\+\.go$'
+    call go#cmd#Build(0)
+  endif
+endfunction
+
 augroup go
-    autocmd!
-    " Show by default 4 spaces for a tab
-    autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
-    " :GoBuild and :GoTestCompile
-    autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-    " :GoTest
-    autocmd FileType go nmap <leader>t  <Plug>(go-test)
-    " :GoRun
-    autocmd FileType go nmap <leader>r  <Plug>(go-run)
-    " :GoDoc
-    " autocmd FileType go nmap <Leader>d <Plug>(go-doc)
-    " :GoCoverageToggle
-    autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
-    " :GoInfo
-    autocmd FileType go nmap <Leader>i <Plug>(go-info)
-    " :GoMetaLinter
-    autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
-    " :GoDef but opens in a vertical split
-    autocmd FileType go nmap <Leader>dv <Plug>(go-def-vertical)
-    " :GoDef but opens in a horizontal split
-    autocmd FileType go nmap <Leader>ds <Plug>(go-def-split)
-    " :GoAlternate  commands :A, :AV, :AS and :AT
-    autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
-    autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
-    autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
-    autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+  autocmd!
+
+  autocmd FileType go nmap <silent> <Leader>s <Plug>(go-def-split)
+  autocmd FileType go nmap <silent> <Leader>d <Plug>(go-def-tab)
+
+  autocmd FileType go nmap <silent> <Leader>x <Plug>(go-doc-vertical)
+
+  autocmd FileType go nmap <silent> <Leader>i <Plug>(go-info)
+  autocmd FileType go nmap <silent> <Leader>l <Plug>(go-metalinter)
+
+  autocmd FileType go nmap <silent> <leader>b :<C-u>call <SID>build_go_files()<CR>
+  autocmd FileType go nmap <silent> <leader>t  <Plug>(go-test)
+  autocmd FileType go nmap <silent> <leader>r  <Plug>(go-run)
+  autocmd FileType go nmap <silent> <leader>e  <Plug>(go-install)
+
+  autocmd FileType go nmap <silent> <Leader>c <Plug>(go-coverage-toggle)
+
+  " I like these more!
+  autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+  autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+  autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+  autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 augroup END
 
-" build_go_files is a custom function that builds or compiles the test file.
-" It calls :GoBuild if its a Go file, or :GoTestCompile if it's a test file
-function! s:build_go_files()
-    let l:file = expand('%')
-    if l:file =~# '^\f\+_test\.go$'
-    call go#cmd#Test(0, 1)
-    elseif l:file =~# '^\f\+\.go$'
-    call go#cmd#Build(0)
-    endif
-endfunction
-
-" go language
-let s:tlist_def_go_settings = 'go;g:enum;s:struct;u:union;t:type;' .
-                           \ 'v:variable;f:function'
-
 " ==================== FZF ====================
-"
-:nmap <leader>t :FZF<CR>
-set rtp+=/usr/local/opt/fzf
+let g:fzf_command_prefix = 'Fzf'
+let g:fzf_layout = { 'down': '~20%' }
 
-" ==================== Lightline ====================
-"
-let g:lightline = {
-      \ 'colorscheme': 'one',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste'],
-      \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark', 'go'] ],
-      \   'right': [ [ 'lineinfo' ],
-      \              [ 'percent' ],
-      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
-      \ },
-      \ 'component': {
-      \   'go': '%#goStatuslineColor#%{LightLineGo()}',
-      \ },
-      \ 'component_visible_condition': {
-      \   'go': '(exists("*go#statusline#Show") && ""!=go#statusline#Show())'
-      \ },
-      \ 'component_function': {
-      \   'lineinfo': 'LightLineInfo',
-      \   'percent': 'LightLinePercent',
-      \   'modified': 'LightLineModified',
-      \   'filename': 'LightLineFilename',
-      \   'fileformat': 'LightLineFileformat',
-      \   'filetype': 'LightLineFiletype',
-      \   'fileencoding': 'LightLineFileencoding',
-      \   'mode': 'LightLineMode',
-      \   'fugitive': 'LightLineFugitive',
-      \   'ctrlpmark': 'CtrlPMark',
-      \ },
-      \ }
+nmap <C-p> :FzfHistory<cr>
+imap <C-p> <esc>:<C-u>FzfHistory<cr>
 
-function! LightLineModified()
-  if &filetype == "help"
-    return ""
-  elseif &modified
-    return "+"
-  elseif &modifiable
-    return ""
-  else
-    return ""
-  endif
-endfunction
+nmap <C-b> :FzfFiles<cr>
+imap <C-b> <esc>:<C-u>FzfFiles<cr>
 
-function! LightLineFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
+let g:rg_command = '
+  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
+  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
+  \ -g "!{.git,node_modules,vendor}/*" '
 
-function! LightLineFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
 
-function! LightLineFileencoding()
-  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
-endfunction
+command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 
-function! LightLineInfo()
-  return winwidth(0) > 60 ? printf("%3d:%-2d", line('.'), col('.')) : ''
-endfunction
+" ==================== delimitMate ====================
+let g:delimitMate_expand_cr = 1
+let g:delimitMate_expand_space = 1
+let g:delimitMate_smart_quotes = 1
+let g:delimitMate_expand_inside_quotes = 0
+let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
 
-function! LightLinePercent()
-  return &ft =~? 'vimfiler' ? '' : (100 * line('.') / line('$')) . '%'
-endfunction
-
-function! LightLineFugitive()
-  return exists('*fugitive#head') ? fugitive#head() : ''
-endfunction
-
-function! LightLineGo()
-  return exists('*go#statusline#Show') ? go#statusline#Show() : ''
-endfunction
-
-function! LightLineMode()
-  let fname = expand('%:t')
-  return fname == 'ControlP' ? 'CtrlP' :
-        \ &ft == 'vimfiler' ? 'VimFiler' :
-        \ winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
-function! LightLineFilename()
-  let fname = expand('%:t')
-  if mode() == 't'
-    return ''
-  endif
-
-  return fname == 'ControlP' ? g:lightline.ctrlp_item :
-        \ &ft == 'vimfiler' ? vimfiler#get_status_string() :
-        \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
-        \ ('' != fname ? fname : '[No Name]')
-endfunction
-
-function! LightLineReadonly()
-  return &ft !~? 'help' && &readonly ? 'RO' : ''
-endfunction
-
-function! CtrlPMark()
-  if expand('%:t') =~ 'ControlP'
-    call lightline#link('iR'[g:lightline.ctrlp_regex])
-    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
-          \ , g:lightline.ctrlp_next], 0)
-  else
-    return ''
-  endif
-endfunction
-
-let g:ctrlp_status_func = {
-      \ 'main': 'CtrlPStatusFunc_1',
-      \ 'prog': 'CtrlPStatusFunc_2',
-      \ }
-
-function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
-  let g:lightline.ctrlp_regex = a:regex
-  let g:lightline.ctrlp_prev = a:prev
-  let g:lightline.ctrlp_item = a:item
-  let g:lightline.ctrlp_next = a:next
-  return lightline#statusline(0)
-endfunction
-
-function! CtrlPStatusFunc_2(str)
-  return lightline#statusline(0)
-endfunction
-
-cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>e :FZF -m<CR>
-
-" snippets
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-let g:UltiSnipsEditSplit="vertical"
-
-" syntastic
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_error_symbol='✗'
-let g:syntastic_warning_symbol='⚠'
-let g:syntastic_style_error_symbol = '✗'
-let g:syntastic_style_warning_symbol = '⚠'
-let g:syntastic_auto_loc_list=1
-let g:syntastic_aggregate_errors = 1
-
-" Tagbar
-nmap <silent> <F4> :TagbarToggle<CR>
-let g:tagbar_autofocus = 1
-
-" Disable visualbell
-set noerrorbells visualbell t_vb=
-if has('autocmd')
-  autocmd GUIEnter * set visualbell t_vb=
-endif
-
-"" Copy/Paste/Cut
-if has('unnamedplus')
-  set clipboard=unnamed,unnamedplus
-endif
-
-" UNITE
-nmap <silent> <Leader>ut :Unite buffer -auto-resize -start-insert<CR>
-nmap <silent> <Leader>up :Unite file_rec/async -start-insert<CR>
-nmap <silent> <Leader>faf :Unite grep:.: -no-quit -direction="bottom"<CR>
-
-"" fzf.vim
-set wildmode=list:longest,list:full
-set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,__pycache__
-let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
-
-" The Silver Searcher
-if executable('ag')
-  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
-  set grepprg=ag\ --nogroup\ --nocolor
-endif
-
-" ripgrep
-if executable('rg')
-  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
-  set grepprg=rg\ --vimgrep
-  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-endif
-
-""""""""""
-"" markdown
-let g:vim_markdown_folding_disabled=1
-
-
-""""""""""
-"" javascript
-let g:javascript_enable_domhtmlcss = 1
+imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 
 " ==================== NerdTree ====================
 " For toggling
 noremap <Leader>n :NERDTreeToggle<cr>
-noremap <Leader>F :NERDTreeFind<cr>
+noremap <Leader>f :NERDTreeFind<cr>
 
 let NERDTreeShowHidden=1
+
+" ==================== ag ====================
+let g:ackprg = 'ag --vimgrep --smart-case'
+
+" ==================== markdown ====================
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_fenced_languages = ['go=go', 'viml=vim', 'bash=sh']
+let g:vim_markdown_toml_frontmatter = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_new_list_item_indent = 2
+let g:vim_markdown_no_extensions_in_markdown = 1
 
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
@@ -870,54 +713,3 @@ nmap  -  <Plug>(choosewin)
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
-
-""""""""""
-"" tagbar
-nmap <silent> <F8> :TagbarToggle<CR>
-let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-let g:tagbar_type_ruby = {
-    \ 'kinds' : [
-        \ 'm:modules',
-        \ 'c:classes',
-        \ 'd:describes',
-        \ 'C:contexts',
-        \ 'f:methods',
-        \ 'F:singleton methods'
-    \ ]
-\ }
-
-let g:signify_vcs_list = [ 'git' ]
-
-""""""""""
-"" Status bar
-if exists("*fugitive#statusline")
-  set statusline+=%{fugitive#statusline()}
-endif
