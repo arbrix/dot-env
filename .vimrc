@@ -15,6 +15,7 @@ Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'fatih/vim-hclfmt'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 
 " Text editing
 Plug 'Raimondi/delimitMate'
@@ -24,16 +25,8 @@ Plug 'tpope/vim-repeat'
 
 " Completion
 Plug 'SirVer/ultisnips'
-if isdirectory('/usr/local/opt/fzf')
-  Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
-else
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-  Plug 'junegunn/fzf.vim'
-endif
-let g:make = 'gmake'
-if exists('make')
-        let g:make = 'make'
-endif
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
 
 " VCS
 Plug 'tpope/vim-fugitive'
