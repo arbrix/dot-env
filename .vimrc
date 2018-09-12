@@ -9,6 +9,7 @@ Plug 't9md/vim-choosewin' " Land on window you chose like tmux's 'display-pane'
 Plug 'mileszs/ack.vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'scrooloose/nerdtree'
+Plug 'ctrlpvim/ctrlp.vim'
 
 " Languages
 Plug 'fatih/vim-go'
@@ -27,8 +28,13 @@ Plug 'tpope/vim-repeat'
 Plug 'SirVer/ultisnips'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
+Plug 'honza/vim-snippets'
+Plug 'Townk/vim-autoclose'
+Plug 'tomtom/tcomment_vim'
 
-" VCS
+" Git support
+Plug 'kablamo/vim-git-log'
+Plug 'gregsexton/gitv'
 Plug 'tpope/vim-fugitive'
 
 " Color themes
@@ -36,6 +42,7 @@ Plug 'rakr/vim-one'
 Plug 'altercation/vim-colors-solarized'
 Plug 'fatih/molokai'
 Plug 'joshdick/onedark.vim'
+Plug 'morhetz/gruvbox'
 
 " Unite
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
@@ -70,6 +77,7 @@ set mouse=a
 
 set autowrite
 set noerrorbells                " No beeps
+set number
 set relativenumber
 set showcmd
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -120,7 +128,16 @@ set updatetime=300
 set nocursorcolumn              " Do not highlight column (speeds up highlighting)
 set nocursorline                " Do not highlight cursor (speeds up highlighting)
 set conceallevel=2           " Concealed text is completely hidden
-set lazyredraw                  " Wait to redraw
+
+
+set complete-=i " Limit the files searched for auto-completes.
+set lazyredraw  " Don’t update screen during macro and script execution
+
+" Text Rendering Options
+set display+=lastline " Always try to show a paragraph’s last line.
+set linebreak       " Avoid wrapping a line in the middle of a word.
+set scrolloff=1     " The number of screen lines to keep above and below the cursor.
+set sidescrolloff=5 " The number of screen columns to keep to the left and right of the cursor.
 
 set guifont=Fira\ Code:h12
 " Enable to copy to clipboard for operations like yank, delete, change and put
@@ -139,24 +156,27 @@ if has('persistent_undo')
 endif
 
 " Colorscheme
-set term=builtin_ansi
 set t_Co=256
 syntax on
 let g:solarized_termtrans = 1
-let g:solarized_termcolors=256
-let g:solarized_visibility = "normal"
-let g:solarized_contrast = "normal"
+let g:solarized_termcolors= 256
+let g:solarized_visibility= "normal"
+let g:solarized_contrast  = "normal"
 set background=dark
-colorscheme solarized
+colorscheme gruvbox
 
-set modelines=0
+set nomodeline " Ignore file’s mode lines; use vimrc configurations instead
 
 set wildmenu
 set wildmode=list:longest
 
 " Vim wide ignore files
-set wildignore=*.swp,*.bak,.DS_Store
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite,.DS_Store,*/.git,*.bak
+set wildignore=*.swp,*.bak,.DS_Store,*~,*.o,*.pyc,*.sqlite,*.db,*.zip
+if has("win16") || has("win32")
+    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+else
+    set wildignore+=.git\*,.hg\*,.svn\*,*/tmp
+endif
 set shell=/bin/zsh
 " set undofile
 hi vertsplit guifg=fg guibg=bg
@@ -489,7 +509,7 @@ endif
 function! s:VSetSearch()
   let temp = @@
   norm! gvy
-  let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+  let @/ = substitute(escape(@@, '\'), '\n', '\\n', 'g')
   let @@ = temp
 endfunction
 
@@ -507,6 +527,24 @@ nnoremap <leader>ui :<C-u>call <SID>create_go_doc_comment()<CR>
 """""""""""""""""""""
 "      Plugins      "
 """""""""""""""""""""
+
+" ==================== Snippets ====================
+
+let g:SuperTabDefaultCompletionType    = '<C-n>'
+let g:SuperTabCrMapping                = 0
+let g:UltiSnipsExpandTrigger           = '<tab>'
+let g:UltiSnipsJumpForwardTrigger      = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
+let g:UltiSnipsEditSplit="vertical" " If you want :UltiSnipsEdit to split your window.
+let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
+
+" Neocomplete Settings
+let g:acp_enableAtStartup = 0
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+
 " ==================== Fugitive ====================
 vnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gb :Gblame<CR>
@@ -530,10 +568,10 @@ let g:go_autodetect_gopath = 1
 let g:go_highlight_types = 1
 let g:go_highlight_extra_types = 1
 let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
+"let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_interfaces = 1
+"let g:go_highlight_structs = 1
+"let g:go_highlight_interfaces = 1
 let g:go_highlight_operators = 0
 let g:go_highlight_build_constraints = 1
 let g:go_list_type = "quickfix"
@@ -554,7 +592,7 @@ let g:go_snippet_case_type = "snake_case"
 let g:go_fmt_fail_silently = 1
 let g:go_imports_fail_silently = 1
 let g:go_play_open_browser = 1
-let g:go_play_browser_command = "chrome"
+let g:go_play_browser_command = "firefox"
 " By default new terminals are opened in a vertical split.
 let g:go_term_mode = "split"
 " By default the testing commands run asynchronously in the background and display results with go#jobcontrol#Statusline().
@@ -566,14 +604,10 @@ let g:go_decls_includes = "func,type"
 
 let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
 
-let g:go_metalinter_enabled = ['vet', 'golint']
+let g:go_metalinter_enabled = ['vet', 'golint', 'misspell']
 let g:go_metalinter_autosave = 1
-let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'misspell']
 let g:go_metalinter_deadline = "5s"
-
-" Open :GoDeclsDir with ctrl-g
-nmap <C-g> :GoDeclsDir<cr>
-imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
 
 " run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
@@ -603,6 +637,10 @@ augroup go
 
   autocmd FileType go nmap <silent> <Leader>c <Plug>(go-coverage-toggle)
 
+  " Open :GoDeclsDir with ctrl-g
+  autocmd FileType go nmap <C-g> :GoDeclsDir<cr>
+  autocmd FileType go imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
+
   " I like these more!
   autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
   autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
@@ -611,8 +649,10 @@ augroup go
 augroup END
 
 " ==================== FZF ====================
+set rtp+=/usr/local/opt/fzf
 let g:fzf_command_prefix = 'Fzf'
 let g:fzf_layout = { 'down': '~20%' }
+
 
 nmap <C-p> :FzfHistory<cr>
 imap <C-p> <esc>:<C-u>FzfHistory<cr>

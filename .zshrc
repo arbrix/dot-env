@@ -14,6 +14,7 @@ alias ls='ls -GpF' # Mac OSX specific
 alias ll='ls -alGpF' # Mac OSX specific
 
 alias dc='docker-compose'
+alias gometalinter='gometalinter.v2'
 
 # =============
 #    EXPORT
@@ -21,6 +22,8 @@ alias dc='docker-compose'
 export EDITOR="vim"
 export LSCOLORS=cxBxhxDxfxhxhxhxhxcxcx
 export CLICOLOR=1
+
+export TERM=xterm
 
 # support colors in less
 export LESS_TERMCAP_mb=$'\E[01;31m'
@@ -58,8 +61,8 @@ if [ -z "$HISTFILE" ]; then
     HISTFILE=$HOME/.zsh_history
 fi
 
-HISTSIZE=1000000
-SAVEHIST=1000000
+HISTSIZE=10000
+SAVEHIST=10000
 
 setopt append_history
 setopt extended_history
@@ -217,12 +220,13 @@ source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # ===================
 #    THIRD PARTY
 # ===================
-# brew install jump
-# https://github.com/gsamokovarov/jump
-eval "$(jump shell)"
 
 # brew install direnv
 # https://github.com/direnv/direnv
 eval "$(direnv hook zsh)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+if [ -f $(brew --prefix)/etc/brew-wrap ];then
+  source $(brew --prefix)/etc/brew-wrap
+fi

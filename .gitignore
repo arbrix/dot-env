@@ -2,3 +2,4 @@
 *vim/bundle
 .nvim/.init*
 gitconfig
+.DB_Store
