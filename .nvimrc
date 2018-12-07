@@ -1,4 +1,5 @@
-n management
+"----------------------------------------------
+" Plugin management
 "
 " Download vim-plug from the URL below and follow the installation
 " instructions:
@@ -89,7 +90,9 @@ set list                          " show trailing whitespace
 set listchars=tab:\|\ ,trail:▫
 set nospell                       " disable spelling
 set noswapfile                    " disable swapfile usage
-set nowrap
+set wrap
+set linebreak
+set nolist  " list disables linebreak
 set noerrorbells                  " No bells!
 set novisualbell                  " I said, no bells!
 set number                        " show number ruler
@@ -107,8 +110,8 @@ if has('nvim')
     " install the neovim package for these binaries separately like this for
     " example:
     " pip3.6 install -U neovim
-    let g:python_host_prog = '/usr/bin/python2'
-    let g:python3_host_prog = '/usr/bin/python3'
+    let g:python_host_prog = '/usr/bin/python'
+    let g:python3_host_prog = '/usr/local/bin/python3'
 endif
 
 " Enable mouse if possible
@@ -569,9 +572,9 @@ let g:neomake_go_gometalinter_maker = {
 " ALE
 let b:ale_fixers = {
 \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-\ 'go': ['goimport', 'golangci-lint'],
+\ 'go': ['goimports'],
 \}
-let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=golint --enable=megacheck --enable=gosimple --enable=misspell'
+let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=govet --enable=golint --enable=megacheck --enable=gosimple --enable=misspell'
 " Set this variable to 1 to fix files when you save them.
 let g:ale_fix_on_save = 1
 " Enable completion where available.
