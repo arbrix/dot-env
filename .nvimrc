@@ -21,8 +21,8 @@ Plug 'tpope/vim-rhubarb'           " Depenency for tpope/fugitive
 Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'fatih/vim-hclfmt'
-Plug 'cespare/vim-toml'                        " toml syntax highlighting
-Plug 'lifepillar/pgsql.vim'                    " PostgreSQL syntax highlighting
+Plug 'hashivim/vim-terraform'                  " Terraform syntax highlighting
+Plug 'kylef/apiblueprint.vim'                  " API Blueprint syntax highlighting
 Plug 'pangloss/vim-javascript'                 " JavaScript syntax highlighting
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'autozimu/LanguageClient-neovim', {
