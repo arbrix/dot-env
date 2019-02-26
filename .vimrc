@@ -1,33 +1,51 @@
+" Enable nvim with python
+let g:python_host_prog  = '/usr/local/bin/python'
+let g:python3_host_prog = '/usr/local/bin/python3'
+let g:loaded_python_provider = 1
+
+"----------------------------------------------
+" Plugin management
+"
+" Download vim-plug from the URL below and follow the installation
+" instructions:
+" https://github.com/junegunn/vim-plug
+"----------------------------------------------
 call plug#begin(expand('~/.vim/plugged'))
+
 " UI
 Plug 'itchyny/lightline.vim'
+Plug 'maximbaz/lightline-ale'
 Plug 'godlygeek/tabular'
 
 " Misc
-Plug 'ConradIrwin/vim-bracketed-paste' " enables transparent pasting into vim. (i.e. no more :set paste!)
-Plug 't9md/vim-choosewin' " Land on window you chose like tmux's 'display-pane'
 Plug 'mileszs/ack.vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'scrooloose/nerdtree'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tpope/vim-rhubarb'           " Depenency for tpope/fugitive
 
 " Languages
 Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'fatih/vim-hclfmt'
+Plug 'cespare/vim-toml'                        " toml syntax highlighting
+Plug 'lifepillar/pgsql.vim'                    " PostgreSQL syntax highlighting
+Plug 'pangloss/vim-javascript'                 " JavaScript syntax highlighting
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
-Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
+Plug 'autozimu/LanguageClient-neovim', {
+\ 'branch': 'next',
+\ 'do': 'bash install.sh',
+\ }
 
 " Text editing
-Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
+Plug 'w0rp/ale'
 
 " Completion
-Plug 'SirVer/ultisnips'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
+Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'Townk/vim-autoclose'
 Plug 'tomtom/tcomment_vim'
@@ -38,14 +56,9 @@ Plug 'gregsexton/gitv'
 Plug 'tpope/vim-fugitive'
 
 " Color themes
-Plug 'rakr/vim-one'
 Plug 'altercation/vim-colors-solarized'
-Plug 'fatih/molokai'
-Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
 
-" Unite
-Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 " Required
 call plug#end()
 
@@ -143,25 +156,21 @@ set guifont=Fira\ Code:h12
 " Enable to copy to clipboard for operations like yank, delete, change and put
 " http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
 if has('unnamedplus')
-  set clipboard^=unnamed
-  set clipboard^=unnamedplus
+set clipboard^=unnamed
+set clipboard^=unnamedplus
 endif
 
 set viminfo='200
 
 " This enables us to undo files even if you exit Vim.
 if has('persistent_undo')
-  set undofile
-  set undodir=~/.cache/vim
+set undofile
+set undodir=~/.cache/vim
 endif
 
 " Colorscheme
 set t_Co=256
 syntax on
-let g:solarized_termtrans = 1
-let g:solarized_termcolors= 256
-let g:solarized_visibility= "normal"
-let g:solarized_contrast  = "normal"
 set background=dark
 colorscheme gruvbox
 
@@ -172,121 +181,38 @@ set wildmode=list:longest
 
 " Vim wide ignore files
 set wildignore=*.swp,*.bak,.DS_Store,*~,*.o,*.pyc,*.sqlite,*.db,*.zip
+
 if has("win16") || has("win32")
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 else
     set wildignore+=.git\*,.hg\*,.svn\*,*/tmp
 endif
+
 set shell=/bin/zsh
 " set undofile
 hi vertsplit guifg=fg guibg=bg
 
 augroup filetypedetect
-  command! -nargs=* -complete=help Help vertical belowright help <args>
-  autocmd FileType help wincmd L
-  
-  autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
-  autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
-  autocmd BufNewFile,BufRead *.hcl setf conf
-  autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
-  
-  autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
-  autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
-  autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
-  autocmd BufNewFile,BufRead *.html setlocal noet ts=4 sw=4
-  autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd BufNewFile,BufRead *.sh setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd BufNewFile,BufRead *.proto setlocal expandtab shiftwidth=2 tabstop=2
-  
-  autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
+command! -nargs=* -complete=help Help vertical belowright help <args>
+autocmd FileType help wincmd L
+
+autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
+autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
+autocmd BufNewFile,BufRead *.hcl setf conf
+autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+
+autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
+autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
+autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
+autocmd BufNewFile,BufRead *.html setlocal noet ts=4 sw=4
+autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
+autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
+autocmd BufNewFile,BufRead *.sh setlocal expandtab shiftwidth=2 tabstop=2
+autocmd BufNewFile,BufRead *.proto setlocal expandtab shiftwidth=2 tabstop=2
+
+autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
+autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
 augroup END
-
-"=====================================================
-"===================== STATUSLINE ====================
-
-let s:modes = {
-      \ 'n': 'NORMAL', 
-      \ 'i': 'INSERT', 
-      \ 'R': 'REPLACE', 
-      \ 'v': 'VISUAL', 
-      \ 'V': 'V-LINE', 
-      \ "\<C-v>": 'V-BLOCK',
-      \ 'c': 'COMMAND',
-      \ 's': 'SELECT', 
-      \ 'S': 'S-LINE', 
-      \ "\<C-s>": 'S-BLOCK', 
-      \ 't': 'TERMINAL'
-      \}
-
-let s:prev_mode = ""
-function! StatusLineMode()
-  let cur_mode = get(s:modes, mode(), '')
-
-  " do not update higlight if the mode is the same
-  if cur_mode == s:prev_mode
-    return cur_mode
-  endif
-
-  if cur_mode == "NORMAL"
-    exe 'hi! StatusLine ctermfg=236'
-    exe 'hi! myModeColor cterm=bold ctermbg=148 ctermfg=22'
-  elseif cur_mode == "INSERT"
-    exe 'hi! myModeColor cterm=bold ctermbg=23 ctermfg=231'
-  elseif cur_mode == "VISUAL" || cur_mode == "V-LINE" || cur_mode == "V_BLOCK"
-    exe 'hi! StatusLine ctermfg=236'
-    exe 'hi! myModeColor cterm=bold ctermbg=208 ctermfg=88'
-  endif
-
-  let s:prev_mode = cur_mode
-  return cur_mode
-endfunction
-
-function! StatusLineFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! StatusLinePercent()
-  return (100 * line('.') / line('$')) . '%'
-endfunction
-
-function! StatusLineLeftInfo()
- let branch = fugitive#head()
- let filename = '' != expand('%:t') ? expand('%:t') : '[No Name]'
- if branch !=# ''
-   return printf("%s | %s", branch, filename)
- endif
- return filename
-endfunction
-
-exe 'hi! myInfoColor ctermbg=240 ctermfg=252'
-
-" start building our statusline
-set statusline=
-
-" mode with custom colors
-set statusline+=%#myModeColor#
-set statusline+=%{StatusLineMode()}
-set statusline+=%*
-
-" left information bar (after mode)
-set statusline+=%#myInfoColor#
-set statusline+=\ %{StatusLineLeftInfo()}
-set statusline+=\ %*
-
-" go command status (requires vim-go)
-set statusline+=%#goStatuslineColor#
-set statusline+=%{go#statusline#Show()}
-set statusline+=%*
-
-" right section seperator
-set statusline+=%=
-
-" filetype, percentage, line number and column number
-set statusline+=%#myInfoColor#
-set statusline+=\ %{StatusLineFiletype()}\ %{StatusLinePercent()}\ %l:%v
-set statusline+=\ %*
 
 
 """"""""""""""""""""""
@@ -320,14 +246,6 @@ nnoremap <silent> <leader>q :q!<CR>
 " Center the screen
 nnoremap <space> zz
 
-" Remove search highlight
-" nnoremap <leader><space> :nohlsearch<CR>
-function! s:clear_highlight()
-  let @/ = ""
-  call go#guru#ClearSameIds()
-endfunction
-nnoremap <silent> <leader><space> :<C-u>call <SID>clear_highlight()<CR>
-
 " Source the current Vim file
 nnoremap <leader>pr :Runtime<CR>
 
@@ -340,8 +258,6 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-nnoremap / /\v
-vnoremap / /\v
 nnoremap <leader><space> :noh<cr>
 
 " Disabling arrow keys. Use hjkl, Luke!
@@ -384,7 +300,7 @@ if has('terminal')
   tnoremap <C-j> <C-w>j
   tnoremap <C-k> <C-w>k
   tnoremap <C-l> <C-w>l
- 
+
   " Open terminal in vertical, horizontal and new tab
   nnoremap <leader>tv :vsplit<cr>:term ++curwin<CR>
   nnoremap <leader>ts :split<cr>:term ++curwin<CR>
@@ -461,7 +377,7 @@ vnoremap <silent> # :call VisualSelection('b')<CR>
 
 
 " Window navigation
-nnoremap <leader>w <C-w>v<C-w>lremap <leader>w <C-w>v<C-w>l
+nnoremap <leader>w <C-w>v<C-w>
 nnoremap <C-h> <C-w>h
 " nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -487,10 +403,6 @@ autocmd BufEnter * silent! lcd %:p:h
 
 " Do not show stupid q: window
 map q: :q
-
-" Don't move on * I'd use a function for this but Vim clobbers the last search
-" when you're in a function so fuck it, practicality beats purity.
-nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
 
 " Time out on key codes but not mappings.
 " Basically this makes terminal Vim work sanely.
@@ -541,20 +453,13 @@ let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
 
 " Neocomplete Settings
 let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_at_startup = 0
+let g:neocomplete#enable_smart_case = 0
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 
 " ==================== Fugitive ====================
 vnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gb :Gblame<CR>
-
-" Path to python interpreter for neovim
-let g:python_host_prog  = '/usr/local/bin/python'
-let g:python3_host_prog  = '/usr/local/bin/python3'
-let g:loaded_python_provider = 1
-" Skip the check of neovim module
-let g:python3_host_skip_check = 1
 
 " grep.vim
 nnoremap <silent> <leader>f :Rgrep<CR>
@@ -579,6 +484,7 @@ let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
 
 let g:go_fmt_options = {
+  \ 'gofmt': '-s',
   \ 'goimports': '-local do/',
   \ }
 
@@ -587,12 +493,12 @@ let g:go_debug_windows = {
       \ 'stack': 'botright 10new',
 \ }
 
-let g:go_snippet_case_type = "snake_case"
+let g:go_snippet_case_type = "camelcase"
+let g:go_snippet_engine = "ultisnips"
+let g:go_addtags_transform = "snakecase"
 " By default vim-go shows errors for the fmt command, to disable it:
 let g:go_fmt_fail_silently = 1
 let g:go_imports_fail_silently = 1
-let g:go_play_open_browser = 1
-let g:go_play_browser_command = "firefox"
 " By default new terminals are opened in a vertical split.
 let g:go_term_mode = "split"
 " By default the testing commands run asynchronously in the background and display results with go#jobcontrol#Statusline().
@@ -601,13 +507,14 @@ let g:go_auto_type_info = 1 " automatically show the information whenever you mo
 let g:go_auto_sameids = 1
 let g:go_def_mode = 'godef'
 let g:go_decls_includes = "func,type"
+let g:go_decls_mode = 'fzf'
 
 let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
 
-let g:go_metalinter_enabled = ['vet', 'golint', 'misspell']
-let g:go_metalinter_autosave = 1
-let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'misspell']
-let g:go_metalinter_deadline = "5s"
+let g:go_metalinter_enabled = []
+let g:go_metalinter_autosave = 0
+let g:go_metalinter_autosave_enabled = []
+let g:go_metalinter_deadline = "1s"
 
 " run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
@@ -638,7 +545,8 @@ augroup go
   autocmd FileType go nmap <silent> <Leader>c <Plug>(go-coverage-toggle)
 
   " Open :GoDeclsDir with ctrl-g
-  autocmd FileType go nmap <C-g> :GoDeclsDir<cr>
+  autocmd FileType go nmap <C-g> :ALEGoToDefinition<cr>
+  autocmd FileType go nmap <C-f> :ALEFindReferences<cr>
   autocmd FileType go imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
 
   " I like these more!
@@ -647,6 +555,17 @@ augroup go
   autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
   autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 augroup END
+
+" ==================== LanguageClient ====================
+let g:LanguageClient_serverCommands = {
+    \ 'go': ['go-langserver']
+    \ }
+
+nnoremap <leader>h :call LanguageClient_textDocument_hover()
+nnoremap <leader>d :call LanguageClient_textDocument_definition()
+nnoremap <leader>fr :call LanguageClient_textDocument_references()
+nnoremap <leader>r :call LanguageClient_textDocument_rename()
+nnoremap <leader>m :call LanguageClient_contextMenu()
 
 " ==================== FZF ====================
 set rtp+=/usr/local/opt/fzf
@@ -686,12 +605,186 @@ imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 " ==================== NerdTree ====================
 " For toggling
 noremap <Leader>n :NERDTreeToggle<cr>
-noremap <Leader>f :NERDTreeFind<cr>
 
 let NERDTreeShowHidden=1
 
 " ==================== ag ====================
 let g:ackprg = 'ag --vimgrep --smart-case'
+
+"----------------------------------------------
+" Plugin: bling/vim-airline
+"----------------------------------------------
+" Show status bar by default.
+set laststatus=2
+
+" Enable top tabline.
+let g:airline#extensions#tabline#enabled = 1
+
+" Disable showing tabs in the tabline. This will ensure that the buffers are
+" what is shown in the tabline at all times.
+let g:airline#extensions#tabline#show_tabs = 0
+
+" Enable powerline fonts.
+let g:airline_powerline_fonts = 0
+
+" Explicitly define some symbols that did not work well for me in Linux.
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+let g:airline_symbols.branch = ''
+let g:airline_symbols.maxlinenr = ''
+
+" ==================== ale ====================
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'go': ['goimports'],
+\}
+
+let g:ale_linters = {
+\   'go': ['golangci-lint'],
+\}
+
+let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=golint --enable=megacheck --enable=gosimple --enable=misspell'
+
+let g:ale_fix_on_save = 1
+
+" Error and warning signs.
+let g:ale_sign_error = '✖'
+let g:ale_sign_warning = '⚠'
+
+let g:ale_completion_enabled = 1
+
+function! LinterStatus() abort
+    let l:counts = ale#statusline#Count(bufnr(''))
+
+    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors
+
+    return l:counts.total == 0 ? 'OK' : printf(
+    \   '%dW %dE',
+    \   all_non_errors,
+    \   all_errors
+    \)
+endfunction
+
+set statusline=%{LinterStatus()}
+
+" ==================== Lightline ====================
+"
+let g:lightline = {
+      \ 'colorscheme': 'one',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste'],
+      \             [ 'fugitive', 'filename', 'modified', 'go'] ],
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ],
+      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \ },
+      \ 'component': {
+      \   'go': '%#goStatuslineColor#%{LightLineGo()}',
+      \ },
+      \ 'component_visible_condition': {
+      \   'go': '(exists("*go#statusline#Show") && ""!=go#statusline#Show())'
+      \ },
+      \ 'component_function': {
+      \   'lineinfo': 'LightLineInfo',
+      \   'percent': 'LightLinePercent',
+      \   'modified': 'LightLineModified',
+      \   'filename': 'LightLineFilename',
+      \   'fileformat': 'LightLineFileformat',
+      \   'filetype': 'LightLineFiletype',
+      \   'fileencoding': 'LightLineFileencoding',
+      \   'mode': 'LightLineMode',
+      \   'fugitive': 'LightLineFugitive',
+      \ },
+      \ }
+
+function! LightLineModified()
+  if &filetype == "help"
+    return ""
+  elseif &modified
+    return "+"
+  elseif &modifiable
+    return ""
+  else
+    return ""
+  endif
+endfunction
+
+function! LightLineFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! LightLineFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! LightLineFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! LightLineInfo()
+  return winwidth(0) > 60 ? printf("%3d:%-2d", line('.'), col('.')) : ''
+endfunction
+
+function! LightLinePercent()
+  return &ft =~? 'vimfiler' ? '' : (100 * line('.') / line('$')) . '%'
+endfunction
+
+function! LightLineFugitive()
+  return exists('*fugitive#head') ? fugitive#head() : ''
+endfunction
+
+function! LightLineGo()
+  return exists('*go#statusline#Show') ? go#statusline#Show() : ''
+endfunction
+
+function! LightLineMode()
+  let fname = expand('%:t')
+  return fname == 'ControlP' ? 'CtrlP' :
+        \ &ft == 'vimfiler' ? 'VimFiler' :
+        \ winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! LightLineFilename()
+  let fname = expand('%:t')
+  if mode() == 't'
+    return ''
+  endif
+  return fname == 'ControlP' ? g:lightline.ctrlp_item :
+        \ &ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
+        \ ('' != fname ? fname : '[No Name]')
+endfunction
+
+function! LightLineReadonly()
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
+endfunction
+
+cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <silent> <leader>b :Buffers<CR>
+nnoremap <silent> <leader>e :FZF -m<CR>
+
+
+" ==================== lightline-ale ====================
+let g:lightline = {}
+
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
+let g:lightline.component_type = {
+      \     'linter_checking': 'left',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'left',
+      \ }
+let g:lightline.active = { 'right': [[ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]]}
+
+let g:lightline#ale#indicator_warnings = '⚠'
+let g:lightline#ale#indicator_errors = '✖'
 
 " ==================== markdown ====================
 let g:vim_markdown_folding_disabled = 1
@@ -703,6 +796,21 @@ let g:vim_markdown_no_extensions_in_markdown = 1
 
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
+
+"----------------------------------------------
+" Plugin: mileszs/ack.vim
+"----------------------------------------------
+" Open ack
+nnoremap <leader>a :Ack!<space>
+
+"----------------------------------------------
+" Plugin: neomake/neomake
+"----------------------------------------------
+" Configure signs.
+let g:neomake_error_sign   = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_warning_sign = {'text': '∆', 'texthl': 'NeomakeWarningSign'}
+let g:neomake_message_sign = {'text': '➤', 'texthl': 'NeomakeMessageSign'}
+let g:neomake_info_sign    = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 
 " ==================== UltiSnips ====================
 function! g:UltiSnips_Complete()
@@ -742,7 +850,6 @@ au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
 " ==================== Various other plugin settings ====================
-nmap  -  <Plug>(choosewin)
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']

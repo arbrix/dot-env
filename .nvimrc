@@ -1,74 +1,63 @@
-n management
+"----------------------------------------------
+" Plugin management
 "
 " Download vim-plug from the URL below and follow the installation
 " instructions:
 " https://github.com/junegunn/vim-plug
 "----------------------------------------------
 call plug#begin('~/.vim/plugged')
+" UI
+Plug 'itchyny/lightline.vim'
+Plug 'maximbaz/lightline-ale'
+Plug 'godlygeek/tabular'
 
-" Dependencies
-Plug 'Shougo/neocomplcache'        " Depenency for Shougo/neosnippet
-Plug 'godlygeek/tabular'           " This must come before plasticboy/vim-markdown
+" Misc
+Plug 'mileszs/ack.vim'
+Plug 'plasticboy/vim-markdown'
+Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-rhubarb'           " Depenency for tpope/fugitive
 
-" General plugins
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/neosnippet'
-Plug 'Shougo/neosnippet-snippets'  " Default snippets for many languages
-Plug 'w0rp/ale'
-Plug 'itchyny/lightline.vim'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'ctrlpvim/ctrlp.vim'          " CtrlP is installed to support tag finding in vim-go
-Plug 'editorconfig/editorconfig-vim'
-Plug 'itchyny/calendar.vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'majutsushi/tagbar'
-Plug 'mhinz/vim-signify'
-Plug 'mileszs/ack.vim'
-Plug 'neomake/neomake'
-Plug 'rbgrouleff/bclose.vim'
-Plug 'sbdchd/neoformat'
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
-Plug 'sebdah/vim-delve'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
-Plug 'vimwiki/vimwiki'
-
-" Vim only plugins
-if !has('nvim')
-    Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Needed to make sebdah/vim-delve work on Vim
-    Plug 'Shougo/vimshell.vim'                  " Needed to make sebdah/vim-delve work on Vim
+" Languages
+Plug 'fatih/vim-go'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'fatih/vim-hclfmt'
+Plug 'cespare/vim-toml'                        " toml syntax highlighting
+Plug 'lifepillar/pgsql.vim'                    " PostgreSQL syntax highlighting
+Plug 'pangloss/vim-javascript'                 " JavaScript syntax highlighting
+Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'autozimu/LanguageClient-neovim', {
+\ 'branch': 'next',
+\ 'do': 'bash install.sh',
+\ }
+if has('nvim')
+ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+ Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}}
+ Plug 'jodosha/vim-godebug' " Debugger integration via delve
 endif
 
-" Language support
-Plug 'aklt/plantuml-syntax'                    " PlantUML syntax highlighting
-Plug 'cespare/vim-toml'                        " toml syntax highlighting
-Plug 'chr4/nginx.vim'                          " nginx syntax highlighting
-Plug 'dag/vim-fish'                            " Fish syntax highlighting
-Plug 'digitaltoad/vim-pug'                     " Pug syntax highlighting
-Plug 'fatih/vim-go'                            " Go support
-Plug 'fishbullet/deoplete-ruby'                " Ruby auto completion
-Plug 'hashivim/vim-terraform'                  " Terraform syntax highlighting
-Plug 'kchmck/vim-coffee-script'                " CoffeeScript syntax highlighting
-Plug 'kylef/apiblueprint.vim'                  " API Blueprint syntax highlighting
-Plug 'leafgarland/typescript-vim'              " TypeScript syntax highlighting
-Plug 'lifepillar/pgsql.vim'                    " PostgreSQL syntax highlighting
-Plug 'mxw/vim-jsx'                             " JSX syntax highlighting
-Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' } " Go auto completion
-Plug 'pangloss/vim-javascript'                 " JavaScript syntax highlighting
-Plug 'plasticboy/vim-markdown'                 " Markdown syntax highlighting
-Plug 'rodjek/vim-puppet'                       " Puppet syntax highlighting
-Plug 'tclh123/vim-thrift'                      " Thrift syntax highlighting
-Plug 'zchee/deoplete-go', { 'do': 'make'}      " Go auto completion
-Plug 'zchee/deoplete-jedi'                     " Go auto completion
-Plug 'zimbatm/haproxy.vim'                     " HAProxy syntax highlighting
+" Text editing
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-repeat'
+Plug 'w0rp/ale'
 
-" Colorschemes
+" Completion
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'Townk/vim-autoclose'
+Plug 'buoto/gotests-vim'
+Plug 'tomtom/tcomment_vim'
+
+" Git support
+Plug 'kablamo/vim-git-log'
+Plug 'gregsexton/gitv'
+Plug 'tpope/vim-fugitive'
+
+" Color themes
+Plug 'altercation/vim-colors-solarized'
 Plug 'morhetz/gruvbox'
-
 call plug#end()
 
 "----------------------------------------------
@@ -100,6 +89,7 @@ set softtabstop=2
 set tabstop=2
 set title                         " let vim set the terminal title
 set updatetime=100                " redraw the status bar often
+set wrap linebreak nolist
 
 " neovim specific settings
 if has('nvim')
@@ -107,8 +97,9 @@ if has('nvim')
     " install the neovim package for these binaries separately like this for
     " example:
     " pip3.6 install -U neovim
-    let g:python_host_prog = '/usr/bin/python2'
-    let g:python3_host_prog = '/usr/bin/python3'
+    let g:python_host_prog  = '/usr/local/bin/python'
+    let g:python3_host_prog = '/usr/local/bin/python3'
+    let g:loaded_python_provider = 1
 endif
 
 " Enable mouse if possible
@@ -214,170 +205,9 @@ nnoremap <leader>h :split<cr>
 nnoremap <leader>q :close<cr>
 
 "----------------------------------------------
-" Plugin: MattesGroeger/vim-bookmarks
-"----------------------------------------------
-" Auto save bookmarks
-let g:bookmark_auto_save = 1
-
-" Store the bookmarks in the projects
-let g:bookmark_save_per_working_dir = 1
-
-" Disable the default key mappings
-let g:bookmark_no_default_key_mappings = 1
-
-" Configure key mappings
-" This part also fixes conflicts with NERDTree
-function! BookmarkMapKeys()
-    nmap Mm :BookmarkToggle<cr>
-    nmap Mi :BookmarkAnnotate<cr>
-    nmap Mn :BookmarkNext<cr>
-    nmap Mp :BookmarkPrev<cr>
-    nmap Ma :BookmarkShowAll<cr>
-    nmap Mc :BookmarkClear<cr>
-    nmap Mx :BookmarkClearAll<cr>
-    nmap Mkk :BookmarkMoveUp
-    nmap Mjj :BookmarkMoveDown
-endfunction
-function! BookmarkUnmapKeys()
-    unmap Mm
-    unmap Mi
-    unmap Mn
-    unmap Mp
-    unmap Ma
-    unmap Mc
-    unmap Mx
-    unmap Mkk
-    unmap Mjj
-endfunction
-autocmd BufEnter * :call BookmarkMapKeys()
-autocmd BufEnter NERD_tree_* :call BookmarkUnmapKeys()
-
-"----------------------------------------------
-" Plugin: Shougo/deoplete.nvim
-"----------------------------------------------
-if has('nvim')
-    " Enable deoplete on startup
-    let g:deoplete#enable_at_startup = 1
-endif
-
-" Disable deoplete when in multi cursor mode
-function! Multiple_cursors_before()
-    let b:deoplete_disable_auto_complete = 1
-endfunction
-
-function! Multiple_cursors_after()
-    let b:deoplete_disable_auto_complete = 0
-endfunction
-
-"----------------------------------------------
-" Plugin: christoomey/vim-tmux-navigator
-"----------------------------------------------
-" tmux will send xterm-style keys when its xterm-keys option is on.
-if &term =~ '^screen'
-    execute "set <xUp>=\e[1;*A"
-    execute "set <xDown>=\e[1;*B"
-    execute "set <xRight>=\e[1;*C"
-    execute "set <xLeft>=\e[1;*D"
-endif
-
-" Tmux vim integration
-let g:tmux_navigator_no_mappings = 1
-let g:tmux_navigator_save_on_switch = 1
-
-" Move between splits with ctrl+h,j,k,l
-nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
-nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
-
-"----------------------------------------------
-" Plugin: 'ctrlpvim/ctrlp.vim'
-"----------------------------------------------
-" Note: We are not using CtrlP much in this configuration. But vim-go depend on
-" it to run GoDecls(Dir).
-
-" Disable the CtrlP mapping, since we want to use FZF instead for <c-p>.
-let g:ctrlp_map = ''
-
-"----------------------------------------------
-" Plugin: easymotion/vim-easymotion
-"----------------------------------------------
-" Enable support for bidirectional motions
-map  <leader><leader>w <Plug>(easymotion-bd-w)
-nmap <leader><leader>w <Plug>(easymotion-overwin-w)
-
-"----------------------------------------------
-" Plugin: 'itchyny/calendar.vim'
-"----------------------------------------------
-" Enable Google Calendar integration.
-let g:calendar_google_calendar = 1
-
-" Enable Google Tasks integration.
-let g:calendar_google_task = 1
-
-" Other options
-let g:calendar_first_day = "monday"           " Weeks starts with Monday
-let g:calendar_date_endian = "big"            " Format: year / month / day
-let g:calendar_date_separator = "-"           " Format: year - month - day
-let g:calendar_week_number = 1                " Show week numbers
-let g:calendar_view = "days"                  " Set days as the default view
-
-"----------------------------------------------
 " Plugin: 'junegunn/fzf.vim'
 "----------------------------------------------
 nnoremap <c-p> :FZF<cr>
-
-"----------------------------------------------
-" Plugin: 'majutsushi/tagbar'
-"----------------------------------------------
-" Add shortcut for toggling the tag bar
-nnoremap <F3> :TagbarToggle<cr>
-
-" Language: Go
-" Tagbar configuration for Golang
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-
-"----------------------------------------------
-" Plugin: plasticboy/vim-markdown
-"----------------------------------------------
-" Disable folding
-let g:vim_markdown_folding_disabled = 1
-
-" Auto shrink the TOC, so that it won't take up 50% of the screen
-let g:vim_markdown_toc_autofit = 1
-
-"----------------------------------------------
-" Plugin: rbgrouleff/bclose.vim
-"----------------------------------------------
-" Close buffers
-nnoremap <leader>w :Bclose<cr>
 
 "----------------------------------------------
 " Plugin: mileszs/ack.vim
@@ -420,58 +250,6 @@ let NERDTreeShowHidden = 1
 let g:NERDTreeChDirMode = 2
 
 "----------------------------------------------
-" Plugin: sebdah/vim-delve
-"----------------------------------------------
-" Set the Delve backend.
-let g:delve_backend = "native"
-
-"----------------------------------------------
-" Plugin: Shougo/neosnippet
-"----------------------------------------------
-" Disable the default snippets (needed since we do not install
-" Shougo/neosnippet-snippets).
-"
-" Below you can disable default snippets for specific languages. If you set the
-" language to _ it sets the default for all languages.
-let g:neosnippet#disable_runtime_snippets = {
-    \ 'go': 1
-\}
-
-" Keybindings
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
-
-" Set the path to our snippets
-let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
-
-"----------------------------------------------
-" Plugin: vimwiki/vimwiki
-"----------------------------------------------
-" Path to wiki
-let g:vimwiki_list = [{
-        \ 'path': '~/Dropbox/vimwiki',
-        \ 'syntax': 'markdown',
-        \ 'ext': '.vimwiki.markdown'}]
-
-au FileType vimwiki set expandtab
-au FileType vimwiki set shiftwidth=2
-au FileType vimwiki set softtabstop=2
-au FileType vimwiki set tabstop=2
-
-"----------------------------------------------
-" Plugin: 'terryma/vim-multiple-cursors'
-"----------------------------------------------
-let g:multi_cursor_next_key='<C-n>'
-let g:multi_cursor_skip_key='<C-b>'
-
-"----------------------------------------------
-" Plugin: zchee/deoplete-go
-"----------------------------------------------
-" Enable completing of go pointers
-let g:deoplete#sources#go#pointer = 1
-
-"----------------------------------------------
 " Language: Golang
 "----------------------------------------------
 au FileType go set noexpandtab
@@ -480,7 +258,6 @@ au FileType go set softtabstop=4
 au FileType go set tabstop=4
 
 " Mappings
-au FileType go nmap <F8> :GoMetaLinter<cr>
 au FileType go nmap <F9> :GoCoverageToggle -short<cr>
 au FileType go nmap <F10> :GoTest -short<cr>
 au FileType go nmap <F12> <Plug>(go-def)
@@ -495,11 +272,13 @@ au FileType go nmap <leader>gdh <Plug>(go-def-split)
 au FileType go nmap <leader>gD <Plug>(go-doc)
 au FileType go nmap <leader>gDv <Plug>(go-doc-vertical)
 
+let g:deoplete#enable_at_startup = 1 " ignored by vim because deoplete not installed there
+
 " Run goimports when running gofmt
 let g:go_fmt_command = "goimports"
 
 " Set neosnippet as snippet engine
-let g:go_snippet_engine = "neosnippet"
+let g:go_snippet_engine = "ultisnips"
 
 " Enable syntax highlighting per default
 let g:go_highlight_types = 1
@@ -529,62 +308,54 @@ let g:go_test_show_name = 1
 " gometalinter configuration
 let g:go_metalinter_command = ""
 let g:go_metalinter_deadline = "5s"
-let g:go_metalinter_enabled = [
-    \ 'deadcode',
-    \ 'golint',
-    \ 'gosimple',
-    \ 'vet',
-    \ 'vetshadow',
-    \ 'misspell'
-\]
-let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'misspell']
+let g:go_metalinter_enabled = []
+let g:go_metalinter_autosave_enabled = []
 
 " Set whether the JSON tags should be snakecase or camelcase.
 let g:go_addtags_transform = "snakecase"
 
 " neomake configuration for Go.
-let g:neomake_go_enabled_makers = [ 'go', 'gometalinter' ]
-let g:neomake_go_gometalinter_maker = {
-  \ 'args': [
-  \   '--tests',
-  \   '--enable-gc',
-  \   '--concurrency=3',
-  \   '--fast',
-  \   '-D', 'aligncheck',
-  \   '-D', 'dupl',
-  \   '-D', 'gocyclo',
-  \   '-D', 'gotype',
-  \   '-E', 'misspell',
-  \   '-E', 'unused',
-  \   '%:p:h',
-  \ ],
-  \ 'append_file': 0,
-  \ 'errorformat':
-  \   '%E%f:%l:%c:%trror: %m,' .
-  \   '%W%f:%l:%c:%tarning: %m,' .
-  \   '%E%f:%l::%trror: %m,' .
-  \   '%W%f:%l::%tarning: %m'
-  \ }
+let g:neomake_go_enabled_makers = [ 'go']
 
-" ALE
+" ==================== ale ====================
 let b:ale_fixers = {
 \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-\ 'go': ['goimport', 'golangci-lint'],
+\ 'go': ['goimports'],
 \}
+
+let g:ale_linters = {
+\   'go': ['golangci-lint'],
+\}
+
 let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=golint --enable=megacheck --enable=gosimple --enable=misspell'
 " Set this variable to 1 to fix files when you save them.
 let g:ale_fix_on_save = 1
+" Error and warning signs.
+let g:ale_sign_error = '✖'
+let g:ale_sign_warning = '⚠'
 " Enable completion where available.
 let g:ale_completion_enabled = 1
 let g:ale_lint_on_text_changed = 'never'
 
-"*****************************************************************************
-"*****************************************************************************
+" ==================== lightline-ale ====================
+let g:lightline = {}
 
-"" Include user's local vim config
-if filereadable(expand("~/.config/nvim/local_init.vim"))
-  source ~/.config/nvim/local_init.vim
-endif
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
+let g:lightline.component_type = {
+      \     'linter_checking': 'left',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'left',
+      \ }
+
+let g:lightline#ale#indicator_warnings = '⚠'
+let g:lightline#ale#indicator_errors = '✖'
+
 
 " ==================== Lightline ====================
 "
@@ -595,7 +366,8 @@ let g:lightline = {
       \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark', 'go'] ],
       \   'right': [ [ 'lineinfo' ],
       \              [ 'percent' ],
-      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \              [ 'fileformat', 'fileencoding', 'filetype' ],
+      \              [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ] ],
       \ },
       \ 'component': {
       \   'go': '%#goStatuslineColor#%{LightLineGo()}',
@@ -689,6 +461,58 @@ function! CtrlPMark()
     return ''
   endif
 endfunction
+
+"----------------------------------------------
+" Plugin: mileszs/ack.vim
+"----------------------------------------------
+" Open ack
+nnoremap <leader>a :Ack!<space>
+
+"----------------------------------------------
+" Plugin: neomake/neomake
+"----------------------------------------------
+" Configure signs.
+let g:neomake_error_sign   = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_warning_sign = {'text': '∆', 'texthl': 'NeomakeWarningSign'}
+let g:neomake_message_sign = {'text': '➤', 'texthl': 'NeomakeMessageSign'}
+let g:neomake_info_sign    = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
+
+" ==================== UltiSnips ====================
+function! g:UltiSnips_Complete()
+  call UltiSnips#ExpandSnippet()
+  if g:ulti_expand_res == 0
+    if pumvisible()
+      return "\<C-n>"
+    else
+      call UltiSnips#JumpForwards()
+      if g:ulti_jump_forwards_res == 0
+        return "\<TAB>"
+      endif
+    endif
+  endif
+  return ""
+endfunction
+
+function! g:UltiSnips_Reverse()
+  call UltiSnips#JumpBackwards()
+  if g:ulti_jump_backwards_res == 0
+    return "\<C-P>"
+  endif
+
+  return ""
+endfunction
+
+
+if !exists("g:UltiSnipsJumpForwardTrigger")
+  let g:UltiSnipsJumpForwardTrigger = "<tab>"
+endif
+
+if !exists("g:UltiSnipsJumpBackwardTrigger")
+  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+endif
+
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
 "----------------------------------------------
 " Language: apiblueprint

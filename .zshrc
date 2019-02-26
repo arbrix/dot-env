@@ -49,8 +49,6 @@ export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
-# VIM
-export VIM=/usr/local/share/vim/vim81
 
 # =============
 #    HISTORY
@@ -68,7 +66,7 @@ setopt append_history
 setopt extended_history
 setopt hist_expire_dups_first
 # ignore duplication command history list
-setopt hist_ignore_dups 
+setopt hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_verify
 setopt inc_append_history
@@ -170,7 +168,7 @@ bindkey -e
 
 # [Ctrl-r] - Search backward incrementally for a specified string. The string
 # may begin with ^ to anchor the search to the beginning of the line.
-bindkey '^r' history-incremental-search-backward      
+bindkey '^r' history-incremental-search-backward
 
 if [[ "${terminfo[kpp]}" != "" ]]; then
   bindkey "${terminfo[kpp]}" up-line-or-history       # [PageUp] - Up a line of history
@@ -230,3 +228,9 @@ eval "$(direnv hook zsh)"
 if [ -f $(brew --prefix)/etc/brew-wrap ];then
   source $(brew --prefix)/etc/brew-wrap
 fi
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/ikut/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ikut/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/ikut/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ikut/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
