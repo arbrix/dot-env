@@ -78,7 +78,9 @@ set list                          " show trailing whitespace
 set listchars=tab:\|\ ,trail:▫
 set nospell                       " disable spelling
 set noswapfile                    " disable swapfile usage
-set nowrap
+set wrap
+set linebreak
+set nolist  " list disables linebreak
 set noerrorbells                  " No bells!
 set novisualbell                  " I said, no bells!
 set number                        " show number ruler

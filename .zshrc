@@ -14,7 +14,6 @@ alias ls='ls -GpF' # Mac OSX specific
 alias ll='ls -alGpF' # Mac OSX specific
 
 alias dc='docker-compose'
-alias gometalinter='gometalinter.v2'
 
 # =============
 #    EXPORT
@@ -48,7 +47,6 @@ export GOPATH=$HOME
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
-
 
 # =============
 #    HISTORY
