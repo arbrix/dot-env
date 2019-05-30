@@ -1,3 +1,10 @@
+"----------------------------------------------
+" Plugin management
+"
+" Download vim-plug from the URL below and follow the installation
+" instructions:
+" https://github.com/junegunn/vim-plug
+"----------------------------------------------
 call plug#begin(expand('~/.vim/plugged'))
 " UI
 Plug 'itchyny/lightline.vim'
@@ -7,8 +14,6 @@ Plug 'godlygeek/tabular'
 Plug 'ConradIrwin/vim-bracketed-paste' " enables transparent pasting into vim. (i.e. no more :set paste!)
 Plug 't9md/vim-choosewin' " Land on window you chose like tmux's 'display-pane'
 Plug 'mileszs/ack.vim'
-Plug 'plasticboy/vim-markdown'
-Plug 'scrooloose/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim'
 
 " Languages
@@ -16,14 +21,15 @@ Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'fatih/vim-hclfmt'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
-Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
-Plug 'natebosch/vim-lsc'
+Plug 'godoctor/godoctor.vim', {'for': 'go'} " Gocode refactoring tool
+Plug 'w0rp/ale'
 
 " Text editing
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
+Plug 'terryma/vim-multiple-cursors'
 
 " Completion
 Plug 'SirVer/ultisnips'
@@ -47,709 +53,629 @@ Plug 'morhetz/gruvbox'
 
 " Unite
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-" Required
+
 call plug#end()
 
-""""""""""""""""""""""
-"      Settings      "
-""""""""""""""""""""""
-set nocompatible
-filetype off
-filetype plugin indent on
+"----------------------------------------------
+" General settings
+"----------------------------------------------
+set autoindent                    " take indent for new line from previous line
+set smartindent                   " enable smart indentation
+set autoread                      " reload file if the file changes on the disk
+set autowrite                     " write when switching buffers
+set autowriteall                  " write on :quit
+set clipboard=unnamedplus
+set colorcolumn=81                " highlight the 80th column as an indicator
+set completeopt-=preview          " remove the horrendous preview window
+set cursorline                    " highlight the current line for the cursor
+set encoding=utf-8                " Change how vim represents characters on the screen
+set expandtab                     " expands tabs to spaces
+set list                          " show trailing whitespace
+set listchars=tab:\|\ ,trail:▫
+set nospell                       " disable spelling
+set noswapfile                    " disable swapfile usage
+set wrap
+set linebreak
+set nolist  " list disables linebreak
+set noerrorbells                  " No bells!
+set novisualbell                  " I said, no bells!
+set number                        " show number ruler
+set relativenumber                " show relative numbers in the ruler
+set ruler
+set formatoptions=tcqronj         " set vims text formatting options
+set softtabstop=2
+set tabstop=2
+set title                         " let vim set the terminal title
+set updatetime=100                " redraw the status bar often
+set visualbell                    " Flash screen instead of beep sound
+set fileencoding=utf-8            " Set the encoding of files written
 
-set ttyfast
+" Allow backspace to delete indentation and inserted text
+" i.e. how it works in most programs
+set backspace=indent,eol,start
+" indent  allow backspacing over autoindent
+" eol     allow backspacing over line breaks (join lines)
+" start   allow backspacing over the start of insert; CTRL-W and CTRL-U
+"        stop once at the start of insert.
 
-set ttymouse=xterm2
-set ttyscroll=3
-
-set laststatus=2
-set encoding=utf-8              " Set default encoding to UTF-8
-set fileencoding=utf-8
-set fileencodings=utf-8
-
-set bomb
-set binary
-set autoread                    " Automatically reread changed files without asking me anything
-set autoindent
-set backspace=indent,eol,start  " Makes backspace key more powerful.
-set incsearch                   " Shows the match while typing
-set hlsearch                    " Highlight found searches
-set mouse=a
-
-set autowrite
-set noerrorbells                " No beeps
-set number
-set relativenumber
-set showcmd
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
-set noswapfile
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set smarttab
-set shiftwidth=4
-set tabstop=4
-set softtabstop=0
-set expandtab
-
-set si "Smart indent
-set wrap "Wrap lines
-
-set textwidth=119
-set formatoptions=qrn1
-set colorcolumn=120
-set foldenable
-
-set list
-set listchars=tab:│\ ,eol:¬
-
-"Invisible character colors
-highlight NonText guifg=#4a4a59
-highlight SpecialKey guifg=#4a4a59
-
-set hidden                      " Buffer should still exist if window is closed
-set fileformats=unix,dos,mac    " Prefer Unix over Windows over OS 9 formats
-
-set splitright                  " Vertical windows should be split to right
-set splitbelow                  " Horizontal windows should split to bottom
-set noshowmatch                 " Do not show matching brackets by flickering
-set noshowmode                  " We show the mode with airline or lightline
-
-set ignorecase                  " Search case insensitive...
-set smartcase                   " ... but not it begins with upper case
-set completeopt=menu,menuone    " Show popup menu, even if there is one entry
-set pumheight=10                " Completion window max size
-set updatetime=300
-set nocursorcolumn              " Do not highlight column (speeds up highlighting)
-set nocursorline                " Do not highlight cursor (speeds up highlighting)
-set conceallevel=2           " Concealed text is completely hidden
-
-
-set complete-=i " Limit the files searched for auto-completes.
-set lazyredraw  " Don’t update screen during macro and script execution
-
-" Text Rendering Options
-set display+=lastline " Always try to show a paragraph’s last line.
-set linebreak       " Avoid wrapping a line in the middle of a word.
-set scrolloff=1     " The number of screen lines to keep above and below the cursor.
-set sidescrolloff=5 " The number of screen columns to keep to the left and right of the cursor.
-
-set guifont=Fira\ Code:h12
-" Enable to copy to clipboard for operations like yank, delete, change and put
-" http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
-if has('unnamedplus')
-  set clipboard^=unnamed
-  set clipboard^=unnamedplus
+" neovim specific settings
+if has('nvim')
+    " Set the Python binaries neovim is using. Please note that you will need to
+    " install the neovim package for these binaries separately like this for
+    " example:
+    " pip3.6 install -U neovim
+    let g:python_host_prog = '/usr/bin/python'
+    let g:python3_host_prog = '/usr/local/bin/python3'
 endif
 
-set viminfo='200
-
-" This enables us to undo files even if you exit Vim.
-if has('persistent_undo')
-  set undofile
-  set undodir=~/.cache/vim
+" Enable mouse if possible
+if has('mouse')
+    set mouse=a
 endif
 
-" Colorscheme
-set t_Co=256
-syntax on
-let g:solarized_termtrans = 1
-let g:solarized_termcolors= 256
-let g:solarized_visibility= "normal"
-let g:solarized_contrast  = "normal"
-set background=dark
-colorscheme gruvbox
+" Allow vim to set a custom font or color for a word
+syntax enable
 
-set nomodeline " Ignore file’s mode lines; use vimrc configurations instead
-
-set wildmenu
-set wildmode=list:longest
-
-" Vim wide ignore files
-set wildignore=*.swp,*.bak,.DS_Store,*~,*.o,*.pyc,*.sqlite,*.db,*.zip
-if has("win16") || has("win32")
-    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-else
-    set wildignore+=.git\*,.hg\*,.svn\*,*/tmp
-endif
-set shell=/bin/zsh
-" set undofile
-hi vertsplit guifg=fg guibg=bg
-
-augroup filetypedetect
-  command! -nargs=* -complete=help Help vertical belowright help <args>
-  autocmd FileType help wincmd L
-
-  autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
-  autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
-  autocmd BufNewFile,BufRead *.hcl setf conf
-  autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
-
-  autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
-  autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
-  autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
-  autocmd BufNewFile,BufRead *.html setlocal noet ts=4 sw=4
-  autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd BufNewFile,BufRead *.sh setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd BufNewFile,BufRead *.proto setlocal expandtab shiftwidth=2 tabstop=2
-
-  autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
-augroup END
-
-"=====================================================
-"===================== STATUSLINE ====================
-
-let s:modes = {
-      \ 'n': 'NORMAL',
-      \ 'i': 'INSERT',
-      \ 'R': 'REPLACE',
-      \ 'v': 'VISUAL',
-      \ 'V': 'V-LINE',
-      \ "\<C-v>": 'V-BLOCK',
-      \ 'c': 'COMMAND',
-      \ 's': 'SELECT',
-      \ 'S': 'S-LINE',
-      \ "\<C-s>": 'S-BLOCK',
-      \ 't': 'TERMINAL'
-      \}
-
-let s:prev_mode = ""
-function! StatusLineMode()
-  let cur_mode = get(s:modes, mode(), '')
-
-  " do not update higlight if the mode is the same
-  if cur_mode == s:prev_mode
-    return cur_mode
-  endif
-
-  if cur_mode == "NORMAL"
-    exe 'hi! StatusLine ctermfg=236'
-    exe 'hi! myModeColor cterm=bold ctermbg=148 ctermfg=22'
-  elseif cur_mode == "INSERT"
-    exe 'hi! myModeColor cterm=bold ctermbg=23 ctermfg=231'
-  elseif cur_mode == "VISUAL" || cur_mode == "V-LINE" || cur_mode == "V_BLOCK"
-    exe 'hi! StatusLine ctermfg=236'
-    exe 'hi! myModeColor cterm=bold ctermbg=208 ctermfg=88'
-  endif
-
-  let s:prev_mode = cur_mode
-  return cur_mode
-endfunction
-
-function! StatusLineFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! StatusLinePercent()
-  return (100 * line('.') / line('$')) . '%'
-endfunction
-
-function! StatusLineLeftInfo()
- let branch = fugitive#head()
- let filename = '' != expand('%:t') ? expand('%:t') : '[No Name]'
- if branch !=# ''
-   return printf("%s | %s", branch, filename)
- endif
- return filename
-endfunction
-
-exe 'hi! myInfoColor ctermbg=240 ctermfg=252'
-
-" start building our statusline
-set statusline=
-
-" mode with custom colors
-set statusline+=%#myModeColor#
-set statusline+=%{StatusLineMode()}
-set statusline+=%*
-
-" left information bar (after mode)
-set statusline+=%#myInfoColor#
-set statusline+=\ %{StatusLineLeftInfo()}
-set statusline+=\ %*
-
-" go command status (requires vim-go)
-set statusline+=%#goStatuslineColor#
-set statusline+=%{go#statusline#Show()}
-set statusline+=%*
-
-" right section seperator
-set statusline+=%=
-
-" filetype, percentage, line number and column number
-set statusline+=%#myInfoColor#
-set statusline+=\ %{StatusLineFiletype()}\ %{StatusLinePercent()}\ %l:%v
-set statusline+=\ %*
-
-
-""""""""""""""""""""""
-"      Mappings      "
-""""""""""""""""""""""
-
-let mapleader = ","
-
-" Some useful quickfix shortcuts for quickfix
-map <C-n> :cn<CR>
-map <C-m> :cp<CR>
-nnoremap <leader>a :cclose<CR>
-
-" put quickfix window always to the bottom
-augroup quickfix
-    autocmd!
-    autocmd FileType qf wincmd J
-    autocmd FileType qf setlocal wrap
-augroup END
-
-" Enter automatically into the files directory
-autocmd BufEnter * silent! lcd %:p:h
-
-" Automatically resize screens to be equally the same
-" autocmd VimResized * wincmd =
-
-" Fast saving
-nnoremap <leader>w :w!<cr>
-nnoremap <silent> <leader>q :q!<CR>
-
-" Center the screen
-nnoremap <space> zz
-
-" Remove search highlight
-" nnoremap <leader><space> :nohlsearch<CR>
-function! s:clear_highlight()
-  let @/ = ""
-  call go#guru#ClearSameIds()
-endfunction
-nnoremap <silent> <leader><space> :<C-u>call <SID>clear_highlight()<CR>
-
-" Source the current Vim file
-nnoremap <leader>pr :Runtime<CR>
-
-" Close all but the current one
-nnoremap <leader>o :only<CR>
-
-" Better split switching
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
-
-nnoremap / /\v
-vnoremap / /\v
-nnoremap <leader><space> :noh<cr>
-
-" Disabling arrow keys. Use hjkl, Luke!
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
+" Set the leader button
+let mapleader = ','
 
 " Get efficient: shortcut mappings
 nnoremap ; :
 
-" Move selected text around
-vnoremap J :m '>+1<CR>gv
-vnoremap K :m '<-2<CR>gv
+" Autosave buffers before leaving them
+autocmd BufLeave * silent! :wa
 
-"" Vmap for maintain Visual Mode after shifting > and <
-vmap < <gv
-vmap > >gv
+" Remove trailing white spaces on save
+autocmd BufWritePre * :%s/\s\+$//e
 
-" Map jk to <Esc>
-imap jk <Esc>
+" Center the screen quickly
+nnoremap <space> zz
 
-" Print full path
-map <C-f> :echo expand("%:p")<cr>
+"----------------------------------------------
+" Colors
+"----------------------------------------------
+set background=dark
+colorscheme gruvbox
 
-" Terminal settings
-if has('terminal')
-  " Kill job and close terminal window
-  tnoremap <Leader>q <C-w><C-C><C-w>c<cr>
+" Override the search highlight color with a combination that is easier to
+" read. The default PaperColor is dark green backgroun with black foreground.
+"
+" Reference:
+" - http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
+highlight Search guibg=DeepPink4 guifg=White ctermbg=53 ctermfg=White
 
-  " switch to normal mode with esc
-  tnoremap <Esc> <C-W>N
+" Toggle background with <leader>bg
+map <leader>bg :let &background = (&background == "dark"? "light" : "dark")<cr>
 
-  " mappings to move out from terminal to other views
-  tnoremap <C-h> <C-w>h
-  tnoremap <C-j> <C-w>j
-  tnoremap <C-k> <C-w>k
-  tnoremap <C-l> <C-w>l
+"----------------------------------------------
+" Searching
+"----------------------------------------------
+set incsearch                     " move to match as you type the search query
+set hlsearch                      " disable search result highlighting
 
-  " Open terminal in vertical, horizontal and new tab
-  nnoremap <leader>tv :vsplit<cr>:term ++curwin<CR>
-  nnoremap <leader>ts :split<cr>:term ++curwin<CR>
-  nnoremap <leader>tt :tabnew<cr>:term ++curwin<CR>
-
-  tnoremap <leader>tv <C-w>:vsplit<cr>:term ++curwin<CR>
-  tnoremap <leader>ts <C-w>:split<cr>:term ++curwin<CR>
-  tnoremap <leader>tt <C-w>:tabnew<cr>:term ++curwin<CR>
-
-  " always start terminal in insert mode when I switch to it
-  " NOTE(arslan): startinsert doesn't work in Terminal-normal mode.
-  " autocmd WinEnter * if &buftype == 'terminal' | call feedkeys("i") | endif
+if has('nvim')
+    set inccommand=split          " enables interactive search and replace
 endif
 
-" Source (reload configuration)
-nnoremap <silent> <F5> :source $MYNVIMRC<CR>
+" Clear search highlights
+map <leader>c :nohlsearch<cr>
 
-nnoremap <F6> :setlocal spell! spell?<CR>
-
-" Search mappings: These will make it so that going to the next one in a
-" search will center on the line it's found in.
+" These mappings will make it so that going to the next one in a search will
+" center on the line it's found in.
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
-" Same when moving up and down
-noremap <C-d> <C-d>zz
-noremap <C-u> <C-u>zz
+"----------------------------------------------
+" Navigation
+"----------------------------------------------
+" Disable arrow keys
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
 
-" Remap H and L (top, bottom of screen to left and right end of line)
-nnoremap H ^
-nnoremap L $
-vnoremap H ^
-vnoremap L g_
+" Move between buffers with Shift + arrow key...
+nnoremap <S-Left> :bprevious<cr>
+nnoremap <S-Right> :bnext<cr>
 
-" Act like D and C
-nnoremap Y y$
-
-" Do not show stupid q: window
-map q: :q
-
-" Don't move on * I'd use a function for this but Vim clobbers the last search
-" when you're in a function so fuck it, practicality beats purity.
-nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
-
-""""""""""
-" Split window
-noremap <leader>h :<C-u>split<CR>
-noremap <leader>v :<C-u>vsplit<CR>
-""""""""""
-" Buffer nav
-noremap <leader>q :bp<CR>
-noremap <leader>w :bn<CR>
-" Close buffer
-noremap <leader>d :bd<CR>
-""""""""""
-" Set working directory
-nnoremap <leader>. :lcd %:p:h<CR>
-" Opens an edit command with the path of the currently edited file filled in
-noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-" Opens a tab edit command with the path of the currently edited file filled
-noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
-
-" Enter automatically into the files directory
-autocmd BufEnter * silent! lcd %:p:h
-
-
-""""""""""""""""""""""""""""""
-" => Visual mode related
-""""""""""""""""""""""""""""""
-" Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
-vnoremap <silent> * :call VisualSelection('f')<CR>
-vnoremap <silent> # :call VisualSelection('b')<CR>
-
-
-" Window navigation
-nnoremap <leader>w <C-w>v<C-w>lremap <leader>w <C-w>v<C-w>l
-nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-
-" Source the current Vim file
-nnoremap <leader>pr :Runtime<CR>
-
-" Close all but the current one
-nnoremap <leader>o :only<CR>
-
-" Better split switching
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
-
-" Print full path
-map <C-f> :echo expand("%:p")<cr>
-
-" Enter automatically into the files directory
-autocmd BufEnter * silent! lcd %:p:h
-
-" Do not show stupid q: window
-map q: :q
-
-" Don't move on * I'd use a function for this but Vim clobbers the last search
-" when you're in a function so fuck it, practicality beats purity.
-nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
-
-" Time out on key codes but not mappings.
-" Basically this makes terminal Vim work sanely.
-if !has('gui_running')
-  set notimeout
-  set ttimeout
-  set ttimeoutlen=10
-  augroup FastEscape
+" ... but skip the quickfix when navigating
+augroup qf
     autocmd!
-    au InsertEnter * set timeoutlen=0
-    au InsertLeave * set timeoutlen=1000
-  augroup END
-endif
-
-" Visual Mode */# from Scrooloose {{{
-function! s:VSetSearch()
-  let temp = @@
-  norm! gvy
-  let @/ = substitute(escape(@@, '\'), '\n', '\\n', 'g')
-  let @@ = temp
-endfunction
-
-vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
-vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
-
-" create a go doc comment based on the word under the cursor
-function! s:create_go_doc_comment()
-  norm "zyiw
-  execute ":put! z"
-  execute ":norm I// \<Esc>$"
-endfunction
-nnoremap <leader>ui :<C-u>call <SID>create_go_doc_comment()<CR>
-
-"""""""""""""""""""""
-"      Plugins      "
-"""""""""""""""""""""
-
-" ==================== Snippets ====================
-
-let g:SuperTabDefaultCompletionType    = '<C-n>'
-let g:SuperTabCrMapping                = 0
-let g:UltiSnipsExpandTrigger           = '<tab>'
-let g:UltiSnipsJumpForwardTrigger      = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
-let g:UltiSnipsEditSplit="vertical" " If you want :UltiSnipsEdit to split your window.
-let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
-
-" Neocomplete Settings
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-
-" ==================== Fugitive ====================
-vnoremap <leader>gb :Gblame<CR>
-nnoremap <leader>gb :Gblame<CR>
-
-" Path to python interpreter for neovim
-let g:python_host_prog  = '/usr/local/bin/python'
-let g:python3_host_prog  = '/usr/local/bin/python3'
-let g:loaded_python_provider = 1
-" Skip the check of neovim module
-let g:python3_host_skip_check = 1
-
-" Languages server
-" https://github.com/sourcegraph/go-langserver
-let g:lsc_server_commands = {'go': 'go-langserver'}
-let g:lsc_enable_autocomplete = v:false
-let g:lsc_auto_map = v:true " Use defaults
-
-" grep.vim
-nnoremap <silent> <leader>f :Rgrep<CR>
-let Grep_Default_Options = '-IR'
-let Grep_Skip_Files = '*.log *.db'
-let Grep_Skip_Dirs = '.git node_modules'
-
-" vim-go
-let g:go_bin_path = expand("~/bin")
-let g:go_autodetect_gopath = 1
-let g:go_highlight_types = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_fields = 1
-"let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-"let g:go_highlight_structs = 1
-"let g:go_highlight_interfaces = 1
-let g:go_highlight_operators = 0
-let g:go_highlight_build_constraints = 1
-let g:go_list_type = "quickfix"
-" Enable goimports to automatically insert import paths instead of gofmt:
-let g:go_fmt_command = "goimports"
-
-let g:go_fmt_options = {
-  \ 'goimports': '-local do/',
-  \ }
-
-let g:go_debug_windows = {
-      \ 'vars':  'leftabove 35vnew',
-      \ 'stack': 'botright 10new',
-\ }
-
-let g:go_snippet_case_type = "snake_case"
-" By default vim-go shows errors for the fmt command, to disable it:
-let g:go_fmt_fail_silently = 1
-let g:go_imports_fail_silently = 1
-let g:go_play_open_browser = 1
-let g:go_play_browser_command = "firefox"
-" By default new terminals are opened in a vertical split.
-let g:go_term_mode = "split"
-" By default the testing commands run asynchronously in the background and display results with go#jobcontrol#Statusline().
-let g:go_term_enabled = 1
-let g:go_auto_type_info = 1 " automatically show the information whenever you move your cursor
-let g:go_auto_sameids = 1
-let g:go_def_mode = 'godef'
-let g:go_decls_includes = "func,type"
-
-let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
-
-let g:go_metalinter_enabled = ['vet', 'golint', 'misspell']
-let g:go_metalinter_autosave = 1
-let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'misspell']
-let g:go_metalinter_deadline = "5s"
-
-" run :GoBuild or :GoTestCompile based on the go file
-function! s:build_go_files()
-  let l:file = expand('%')
-  if l:file =~# '^\f\+_test\.go$'
-    call go#test#Test(0, 1)
-  elseif l:file =~# '^\f\+\.go$'
-    call go#cmd#Build(0)
-  endif
-endfunction
-
-augroup go
-  autocmd!
-
-  autocmd FileType go nmap <silent> <Leader>s <Plug>(go-def-split)
-  autocmd FileType go nmap <silent> <Leader>d <Plug>(go-def-tab)
-
-  autocmd FileType go nmap <silent> <Leader>x <Plug>(go-doc-vertical)
-
-  autocmd FileType go nmap <silent> <Leader>i <Plug>(go-info)
-  autocmd FileType go nmap <silent> <Leader>l <Plug>(go-metalinter)
-
-  autocmd FileType go nmap <silent> <leader>b :<C-u>call <SID>build_go_files()<CR>
-  autocmd FileType go nmap <silent> <leader>t  <Plug>(go-test)
-  autocmd FileType go nmap <silent> <leader>r  <Plug>(go-run)
-  autocmd FileType go nmap <silent> <leader>e  <Plug>(go-install)
-
-  autocmd FileType go nmap <silent> <Leader>c <Plug>(go-coverage-toggle)
-
-  " Open :GoDeclsDir with ctrl-g
-  autocmd FileType go nmap <C-g> :GoDeclsDir<cr>
-  autocmd FileType go imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
-
-  " I like these more!
-  autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
-  autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
-  autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
-  autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+    autocmd FileType qf set nobuflisted
 augroup END
 
-" ==================== FZF ====================
-set rtp+=/usr/local/opt/fzf
-let g:fzf_command_prefix = 'Fzf'
-let g:fzf_layout = { 'down': '~20%' }
+" Fix some common typos
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
 
+"----------------------------------------------
+" Splits
+"----------------------------------------------
+" Create horizontal splits below the current window
+set splitbelow
+set splitright
 
-nmap <C-p> :FzfHistory<cr>
-imap <C-p> <esc>:<C-u>FzfHistory<cr>
+" Creating splits
+nnoremap <leader>v :vsplit<cr>
+nnoremap <leader>h :split<cr>
 
-nmap <C-b> :FzfFiles<cr>
-imap <C-b> <esc>:<C-u>FzfFiles<cr>
+" Closing splits
+nnoremap <leader>q :close<cr>
 
-let g:rg_command = '
-  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
-  \ -g "!{.git,node_modules,vendor}/*" '
+"----------------------------------------------
+" netrw - the unloved directory browser
+"----------------------------------------------
 
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
 
-command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
-
-" ==================== delimitMate ====================
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_expand_space = 1
-let g:delimitMate_smart_quotes = 1
-let g:delimitMate_expand_inside_quotes = 0
-let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
-
-imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
-
-" ==================== NerdTree ====================
-" For toggling
-noremap <Leader>n :NERDTreeToggle<cr>
-noremap <Leader>f :NERDTreeFind<cr>
-
-let NERDTreeShowHidden=1
-
-" ==================== ag ====================
-let g:ackprg = 'ag --vimgrep --smart-case'
-
-" ==================== markdown ====================
-let g:vim_markdown_folding_disabled = 1
-let g:vim_markdown_fenced_languages = ['go=go', 'viml=vim', 'bash=sh']
-let g:vim_markdown_toml_frontmatter = 1
-let g:vim_markdown_frontmatter = 1
-let g:vim_markdown_new_list_item_indent = 2
-let g:vim_markdown_no_extensions_in_markdown = 1
-
-" ==================== vim-json ====================
-let g:vim_json_syntax_conceal = 0
-
-" ==================== UltiSnips ====================
-function! g:UltiSnips_Complete()
-  call UltiSnips#ExpandSnippet()
-  if g:ulti_expand_res == 0
-    if pumvisible()
-      return "\<C-n>"
-    else
-      call UltiSnips#JumpForwards()
-      if g:ulti_jump_forwards_res == 0
-        return "\<TAB>"
-      endif
-    endif
-  endif
-  return ""
-endfunction
-
-function! g:UltiSnips_Reverse()
-  call UltiSnips#JumpBackwards()
-  if g:ulti_jump_backwards_res == 0
-    return "\<C-P>"
-  endif
-
-  return ""
-endfunction
-
-
-if !exists("g:UltiSnipsJumpForwardTrigger")
-  let g:UltiSnipsJumpForwardTrigger = "<tab>"
+"----------------------------------------------
+" Plugin: christoomey/vim-tmux-navigator
+"----------------------------------------------
+" tmux will send xterm-style keys when its xterm-keys option is on.
+if &term =~ '^screen'
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xRight>=\e[1;*C"
+    execute "set <xLeft>=\e[1;*D"
 endif
 
-if !exists("g:UltiSnipsJumpBackwardTrigger")
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-endif
+" Tmux vim integration
+let g:tmux_navigator_no_mappings = 1
+let g:tmux_navigator_save_on_switch = 1
 
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+" Move between splits with ctrl+h,j,k,l
+nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
 
-" ==================== Various other plugin settings ====================
-nmap  -  <Plug>(choosewin)
+"----------------------------------------------
+" Plugin: 'ctrlpvim/ctrlp.vim'
+"----------------------------------------------
+" Note: We are not using CtrlP much in this configuration. But vim-go depend on
+" it to run GoDecls(Dir).
 
-" Trigger a highlight in the appropriate direction when pressing these keys:
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+" Disable the CtrlP mapping, since we want to use FZF instead for <c-p>.
+let g:ctrlp_map = ''
+
+"----------------------------------------------
+" Plugin: 'junegunn/fzf.vim'
+"----------------------------------------------
+nnoremap <c-p> :FZF<cr>
+
+"----------------------------------------------
+" Plugin: 'majutsushi/tagbar'
+"----------------------------------------------
+" Add shortcut for toggling the tag bar
+nnoremap <F3> :TagbarToggle<cr>
+
+" Language: Go
+" Tagbar configuration for Golang
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
+
+"----------------------------------------------
+" Plugin: mileszs/ack.vim
+"----------------------------------------------
+" Open ack
+nnoremap <leader>a :Ack!<space>
+
+"----------------------------------------------
+" Plugin: sebdah/vim-delve
+"----------------------------------------------
+" Set the Delve backend.
+let g:delve_backend = "native"
+
+"----------------------------------------------
+" Language: Golang
+"----------------------------------------------
+au FileType go set noexpandtab
+au FileType go set shiftwidth=4
+au FileType go set softtabstop=4
+au FileType go set tabstop=4
+
+" Mappings
+au FileType go nmap <F9> :GoCoverageToggle -short<cr>
+au FileType go nmap <F10> :GoTest -short<cr>
+au FileType go nmap <F12> <Plug>(go-def)
+au Filetype go nmap <leader>ga <Plug>(go-alternate-edit)
+au Filetype go nmap <leader>gah <Plug>(go-alternate-split)
+au Filetype go nmap <leader>gav <Plug>(go-alternate-vertical)
+au FileType go nmap <leader>gt :GoDeclsDir<cr>
+au FileType go nmap <leader>gc <Plug>(go-coverage-toggle)
+au FileType go nmap <leader>gd <Plug>(go-def)
+au FileType go nmap <leader>gdv <Plug>(go-def-vertical)
+au FileType go nmap <leader>gdh <Plug>(go-def-split)
+au FileType go nmap <leader>gD <Plug>(go-doc)
+au FileType go nmap <leader>gDv <Plug>(go-doc-vertical)
+
+" Run goimports when running gofmt
+let g:go_fmt_command = "goimports"
+
+" Set neosnippet as snippet engine
+let g:go_snippet_engine = "ultisnips"
+
+" Enable jump to defenition
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
+
+" Enable syntax highlighting per default
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+
+" Show the progress when running :GoCoverage
+let g:go_echo_command_info = 1
+
+" Show type information
+let g:go_auto_type_info = 1
+
+" Highlight variable uses
+let g:go_auto_sameids = 1
+
+" Fix for location list when vim-go is used together with Syntastic
+let g:go_list_type = "quickfix"
+
+" Add the failing test name to the output of :GoTest
+let g:go_test_show_name = 1
+
+" Set whether the JSON tags should be snakecase or camelcase.
+let g:go_addtags_transform = "snakecase"
+
+"----------------------------------------------
+" ALE
+"----------------------------------------------
+
+let b:ale_fixers = {
+\ '*': ['remove_trailing_lines', 'trim_whitespace'],
+\ 'go': ['goimports'],
+\}
+let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=govet --enable=golint --enable=staticcheck --enable=gosimple --enable=misspell'
+
+" Set this variable to 1 to fix files when you save them.
+let g:ale_fix_on_save = 1
+
+" Enable completion where available.
+let g:ale_completion_enabled = 1
+let g:ale_lint_on_text_changed = 'never'
+
+"----------------------------------------------
+" Lightline
+"----------------------------------------------
+
+let g:lightline = {
+      \ 'colorscheme': 'one',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste'],
+      \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark', 'go'] ],
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ],
+      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \ },
+      \ 'component': {
+      \   'go': '%#goStatuslineColor#%{LightLineGo()}',
+      \ },
+      \ 'component_visible_condition': {
+      \   'go': '(exists("*go#statusline#Show") && ""!=go#statusline#Show())'
+      \ },
+      \ 'component_function': {
+      \   'lineinfo': 'LightLineInfo',
+      \   'percent': 'LightLinePercent',
+      \   'modified': 'LightLineModified',
+      \   'filename': 'LightLineFilename',
+      \   'fileformat': 'LightLineFileformat',
+      \   'filetype': 'LightLineFiletype',
+      \   'fileencoding': 'LightLineFileencoding',
+      \   'mode': 'LightLineMode',
+      \   'fugitive': 'LightLineFugitive',
+      \   'ctrlpmark': 'CtrlPMark',
+      \ },
+      \ }
+
+function! LightLineModified()
+  if &filetype == "help"
+    return ""
+  elseif &modified
+    return "+"
+  elseif &modifiable
+    return ""
+  else
+    return ""
+  endif
+endfunction
+
+function! LightLineFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! LightLineFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! LightLineFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! LightLineInfo()
+  return winwidth(0) > 60 ? printf("%3d:%-2d", line('.'), col('.')) : ''
+endfunction
+
+function! LightLinePercent()
+  return &ft =~? 'vimfiler' ? '' : (100 * line('.') / line('$')) . '%'
+endfunction
+
+function! LightLineFugitive()
+  return exists('*fugitive#head') ? fugitive#head() : ''
+endfunction
+
+function! LightLineGo()
+  return exists('*go#statusline#Show') ? go#statusline#Show() : ''
+endfunction
+
+function! LightLineMode()
+  let fname = expand('%:t')
+  return fname == 'ControlP' ? 'CtrlP' :
+        \ &ft == 'vimfiler' ? 'VimFiler' :
+        \ winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! LightLineFilename()
+  let fname = expand('%:t')
+  if mode() == 't'
+    return ''
+  endif
+
+  return fname == 'ControlP' ? g:lightline.ctrlp_item :
+        \ &ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
+        \ ('' != fname ? fname : '[No Name]')
+endfunction
+
+function! LightLineReadonly()
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
+endfunction
+
+function! CtrlPMark()
+  if expand('%:t') =~ 'ControlP'
+    call lightline#link('iR'[g:lightline.ctrlp_regex])
+    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
+          \ , g:lightline.ctrlp_next], 0)
+  else
+    return ''
+  endif
+endfunction
+
+"----------------------------------------------
+" Language: apiblueprint
+"----------------------------------------------
+au FileType apiblueprint set expandtab
+au FileType apiblueprint set shiftwidth=4
+au FileType apiblueprint set softtabstop=4
+au FileType apiblueprint set tabstop=4
+
+"----------------------------------------------
+" Language: Bash
+"----------------------------------------------
+au FileType sh set noexpandtab
+au FileType sh set shiftwidth=2
+au FileType sh set softtabstop=2
+au FileType sh set tabstop=2
+
+"----------------------------------------------
+" Language: C++
+"----------------------------------------------
+au FileType cpp set expandtab
+au FileType cpp set shiftwidth=4
+au FileType cpp set softtabstop=4
+au FileType cpp set tabstop=4
+
+"----------------------------------------------
+" Language: CSS
+"----------------------------------------------
+au FileType css set expandtab
+au FileType css set shiftwidth=2
+au FileType css set softtabstop=2
+au FileType css set tabstop=2
+
+"----------------------------------------------
+" Language: gitcommit
+"----------------------------------------------
+au FileType gitcommit setlocal spell
+au FileType gitcommit setlocal textwidth=80
+
+"----------------------------------------------
+" Language: fish
+"----------------------------------------------
+au FileType fish set expandtab
+au FileType fish set shiftwidth=2
+au FileType fish set softtabstop=2
+au FileType fish set tabstop=2
+
+"----------------------------------------------
+" Language: gitconfig
+"----------------------------------------------
+au FileType gitconfig set noexpandtab
+au FileType gitconfig set shiftwidth=2
+au FileType gitconfig set softtabstop=2
+au FileType gitconfig set tabstop=2
+
+"----------------------------------------------
+" Language: HTML
+"----------------------------------------------
+au FileType html set expandtab
+au FileType html set shiftwidth=2
+au FileType html set softtabstop=2
+au FileType html set tabstop=2
+
+"----------------------------------------------
+" Language: JavaScript
+"----------------------------------------------
+au FileType javascript set expandtab
+au FileType javascript set shiftwidth=2
+au FileType javascript set softtabstop=2
+au FileType javascript set tabstop=2
+
+"----------------------------------------------
+" Language: JSON
+"----------------------------------------------
+au FileType json set expandtab
+au FileType json set shiftwidth=2
+au FileType json set softtabstop=2
+au FileType json set tabstop=2
+
+"----------------------------------------------
+" Language: LESS
+"----------------------------------------------
+au FileType less set expandtab
+au FileType less set shiftwidth=2
+au FileType less set softtabstop=2
+au FileType less set tabstop=2
+
+"----------------------------------------------
+" Language: Make
+"----------------------------------------------
+au FileType make set noexpandtab
+au FileType make set shiftwidth=2
+au FileType make set softtabstop=2
+au FileType make set tabstop=2
+
+"----------------------------------------------
+" Language: Markdown
+"----------------------------------------------
+au FileType markdown setlocal spell
+au FileType markdown set expandtab
+au FileType markdown set shiftwidth=4
+au FileType markdown set softtabstop=4
+au FileType markdown set tabstop=4
+au FileType markdown set syntax=markdown
+
+"----------------------------------------------
+" Language: PlantUML
+"----------------------------------------------
+au FileType plantuml set expandtab
+au FileType plantuml set shiftwidth=2
+au FileType plantuml set softtabstop=2
+au FileType plantuml set tabstop=2
+
+"----------------------------------------------
+" Language: Protobuf
+"----------------------------------------------
+au FileType proto set expandtab
+au FileType proto set shiftwidth=2
+au FileType proto set softtabstop=2
+au FileType proto set tabstop=2
+
+"----------------------------------------------
+" Language: Python
+"----------------------------------------------
+au FileType python set expandtab
+au FileType python set shiftwidth=4
+au FileType python set softtabstop=4
+au FileType python set tabstop=4
+
+"----------------------------------------------
+" Language: Ruby
+"----------------------------------------------
+au FileType ruby set expandtab
+au FileType ruby set shiftwidth=2
+au FileType ruby set softtabstop=2
+au FileType ruby set tabstop=2
+
+"----------------------------------------------
+" Language: SQL
+"----------------------------------------------
+au FileType sql set expandtab
+au FileType sql set shiftwidth=2
+au FileType sql set softtabstop=2
+au FileType sql set tabstop=2
+
+"----------------------------------------------
+" Language: Thrift
+"----------------------------------------------
+au FileType thrift set expandtab
+au FileType thrift set shiftwidth=2
+au FileType thrift set softtabstop=2
+au FileType thrift set tabstop=2
+
+"----------------------------------------------
+" Language: TOML
+"----------------------------------------------
+au FileType toml set expandtab
+au FileType toml set shiftwidth=2
+au FileType toml set softtabstop=2
+au FileType toml set tabstop=2
+
+"----------------------------------------------
+" Language: TypeScript
+"----------------------------------------------
+au FileType typescript set expandtab
+au FileType typescript set shiftwidth=4
+au FileType typescript set softtabstop=4
+au FileType typescript set tabstop=4
+
+"----------------------------------------------
+" Language: Vader
+"----------------------------------------------
+au FileType vader set expandtab
+au FileType vader set shiftwidth=2
+au FileType vader set softtabstop=2
+au FileType vader set tabstop=2
+
+"----------------------------------------------
+" Language: vimscript
+"----------------------------------------------
+au FileType vim set expandtab
+au FileType vim set shiftwidth=4
+au FileType vim set softtabstop=4
+au FileType vim set tabstop=4
+
+"----------------------------------------------
+" Language: YAML
+"----------------------------------------------
+au FileType yaml set expandtab
+au FileType yaml set shiftwidth=2
+au FileType yaml set softtabstop=2
+au FileType yaml set tabstop=2

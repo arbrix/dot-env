@@ -6,70 +6,53 @@
 " https://github.com/junegunn/vim-plug
 "----------------------------------------------
 call plug#begin('~/.vim/plugged')
-
-" Dependencies
-Plug 'Shougo/neocomplcache'        " Depenency for Shougo/neosnippet
-Plug 'godlygeek/tabular'           " This must come before plasticboy/vim-markdown
-Plug 'tpope/vim-rhubarb'           " Depenency for tpope/fugitive
-
-" General plugins
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/neosnippet'
-Plug 'Shougo/neosnippet-snippets'  " Default snippets for many languages
-Plug 'w0rp/ale'
+" UI
 Plug 'itchyny/lightline.vim'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'ctrlpvim/ctrlp.vim'          " CtrlP is installed to support tag finding in vim-go
-Plug 'editorconfig/editorconfig-vim'
-Plug 'itchyny/calendar.vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'majutsushi/tagbar'
-Plug 'mhinz/vim-signify'
+Plug 'godlygeek/tabular'
+
+" Misc
+Plug 'ConradIrwin/vim-bracketed-paste' " enables transparent pasting into vim. (i.e. no more :set paste!)
+Plug 't9md/vim-choosewin' " Land on window you chose like tmux's 'display-pane'
 Plug 'mileszs/ack.vim'
-Plug 'neomake/neomake'
-Plug 'rbgrouleff/bclose.vim'
-Plug 'sbdchd/neoformat'
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
-Plug 'sebdah/vim-delve'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
-Plug 'vimwiki/vimwiki'
+Plug 'ctrlpvim/ctrlp.vim'
 
-" Vim only plugins
-if !has('nvim')
-    Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Needed to make sebdah/vim-delve work on Vim
-    Plug 'Shougo/vimshell.vim'                  " Needed to make sebdah/vim-delve work on Vim
-endif
-
-" Language support
-Plug 'aklt/plantuml-syntax'                    " PlantUML syntax highlighting
-Plug 'cespare/vim-toml'                        " toml syntax highlighting
-Plug 'chr4/nginx.vim'                          " nginx syntax highlighting
-Plug 'dag/vim-fish'                            " Fish syntax highlighting
-Plug 'digitaltoad/vim-pug'                     " Pug syntax highlighting
-Plug 'fatih/vim-go'                            " Go support
+" Languages
+Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'fishbullet/deoplete-ruby'                " Ruby auto completion
-Plug 'hashivim/vim-terraform'                  " Terraform syntax highlighting
-Plug 'kchmck/vim-coffee-script'                " CoffeeScript syntax highlighting
-Plug 'kylef/apiblueprint.vim'                  " API Blueprint syntax highlighting
-Plug 'leafgarland/typescript-vim'              " TypeScript syntax highlighting
-Plug 'lifepillar/pgsql.vim'                    " PostgreSQL syntax highlighting
-Plug 'mxw/vim-jsx'                             " JSX syntax highlighting
-Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' } " Go auto completion
-Plug 'pangloss/vim-javascript'                 " JavaScript syntax highlighting
-Plug 'plasticboy/vim-markdown'                 " Markdown syntax highlighting
-Plug 'rodjek/vim-puppet'                       " Puppet syntax highlighting
-Plug 'tclh123/vim-thrift'                      " Thrift syntax highlighting
-Plug 'zchee/deoplete-go', { 'do': 'make'}      " Go auto completion
-Plug 'zchee/deoplete-jedi'                     " Go auto completion
-Plug 'zimbatm/haproxy.vim'                     " HAProxy syntax highlighting
+Plug 'fatih/vim-hclfmt'
+Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'godoctor/godoctor.vim', {'for': 'go'} " Gocode refactoring tool
+Plug 'w0rp/ale'
 
-" Colorschemes
+" Text editing
+Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-repeat'
+Plug 'terryma/vim-multiple-cursors'
+
+" Completion
+Plug 'SirVer/ultisnips'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+Plug 'honza/vim-snippets'
+Plug 'Townk/vim-autoclose'
+Plug 'tomtom/tcomment_vim'
+
+" Git support
+Plug 'kablamo/vim-git-log'
+Plug 'gregsexton/gitv'
+Plug 'tpope/vim-fugitive'
+
+" Color themes
+Plug 'rakr/vim-one'
+Plug 'altercation/vim-colors-solarized'
+Plug 'fatih/molokai'
+Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
+
+" Unite
+Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 
 call plug#end()
 
@@ -85,7 +68,7 @@ set clipboard=unnamedplus
 set colorcolumn=81                " highlight the 80th column as an indicator
 set completeopt-=preview          " remove the horrendous preview window
 set cursorline                    " highlight the current line for the cursor
-set encoding=utf-8
+set encoding=utf-8                " Change how vim represents characters on the screen
 set expandtab                     " expands tabs to spaces
 set list                          " show trailing whitespace
 set listchars=tab:\|\ ,trail:▫
@@ -104,6 +87,16 @@ set softtabstop=2
 set tabstop=2
 set title                         " let vim set the terminal title
 set updatetime=100                " redraw the status bar often
+set visualbell                    " Flash screen instead of beep sound
+set fileencoding=utf-8            " Set the encoding of files written
+
+" Allow backspace to delete indentation and inserted text
+" i.e. how it works in most programs
+set backspace=indent,eol,start
+" indent  allow backspacing over autoindent
+" eol     allow backspacing over line breaks (join lines)
+" start   allow backspacing over the start of insert; CTRL-W and CTRL-U
+"        stop once at the start of insert.
 
 " neovim specific settings
 if has('nvim')
@@ -218,60 +211,14 @@ nnoremap <leader>h :split<cr>
 nnoremap <leader>q :close<cr>
 
 "----------------------------------------------
-" Plugin: MattesGroeger/vim-bookmarks
+" netrw - the unloved directory browser
 "----------------------------------------------
-" Auto save bookmarks
-let g:bookmark_auto_save = 1
 
-" Store the bookmarks in the projects
-let g:bookmark_save_per_working_dir = 1
-
-" Disable the default key mappings
-let g:bookmark_no_default_key_mappings = 1
-
-" Configure key mappings
-" This part also fixes conflicts with NERDTree
-function! BookmarkMapKeys()
-    nmap Mm :BookmarkToggle<cr>
-    nmap Mi :BookmarkAnnotate<cr>
-    nmap Mn :BookmarkNext<cr>
-    nmap Mp :BookmarkPrev<cr>
-    nmap Ma :BookmarkShowAll<cr>
-    nmap Mc :BookmarkClear<cr>
-    nmap Mx :BookmarkClearAll<cr>
-    nmap Mkk :BookmarkMoveUp
-    nmap Mjj :BookmarkMoveDown
-endfunction
-function! BookmarkUnmapKeys()
-    unmap Mm
-    unmap Mi
-    unmap Mn
-    unmap Mp
-    unmap Ma
-    unmap Mc
-    unmap Mx
-    unmap Mkk
-    unmap Mjj
-endfunction
-autocmd BufEnter * :call BookmarkMapKeys()
-autocmd BufEnter NERD_tree_* :call BookmarkUnmapKeys()
-
-"----------------------------------------------
-" Plugin: Shougo/deoplete.nvim
-"----------------------------------------------
-if has('nvim')
-    " Enable deoplete on startup
-    let g:deoplete#enable_at_startup = 1
-endif
-
-" Disable deoplete when in multi cursor mode
-function! Multiple_cursors_before()
-    let b:deoplete_disable_auto_complete = 1
-endfunction
-
-function! Multiple_cursors_after()
-    let b:deoplete_disable_auto_complete = 0
-endfunction
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
 
 "----------------------------------------------
 " Plugin: christoomey/vim-tmux-navigator
@@ -303,29 +250,6 @@ nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
 
 " Disable the CtrlP mapping, since we want to use FZF instead for <c-p>.
 let g:ctrlp_map = ''
-
-"----------------------------------------------
-" Plugin: easymotion/vim-easymotion
-"----------------------------------------------
-" Enable support for bidirectional motions
-map  <leader><leader>w <Plug>(easymotion-bd-w)
-nmap <leader><leader>w <Plug>(easymotion-overwin-w)
-
-"----------------------------------------------
-" Plugin: 'itchyny/calendar.vim'
-"----------------------------------------------
-" Enable Google Calendar integration.
-let g:calendar_google_calendar = 1
-
-" Enable Google Tasks integration.
-let g:calendar_google_task = 1
-
-" Other options
-let g:calendar_first_day = "monday"           " Weeks starts with Monday
-let g:calendar_date_endian = "big"            " Format: year / month / day
-let g:calendar_date_separator = "-"           " Format: year - month - day
-let g:calendar_week_number = 1                " Show week numbers
-let g:calendar_view = "days"                  " Set days as the default view
 
 "----------------------------------------------
 " Plugin: 'junegunn/fzf.vim'
@@ -369,59 +293,10 @@ let g:tagbar_type_go = {
 \ }
 
 "----------------------------------------------
-" Plugin: plasticboy/vim-markdown
-"----------------------------------------------
-" Disable folding
-let g:vim_markdown_folding_disabled = 1
-
-" Auto shrink the TOC, so that it won't take up 50% of the screen
-let g:vim_markdown_toc_autofit = 1
-
-"----------------------------------------------
-" Plugin: rbgrouleff/bclose.vim
-"----------------------------------------------
-" Close buffers
-nnoremap <leader>w :Bclose<cr>
-
-"----------------------------------------------
 " Plugin: mileszs/ack.vim
 "----------------------------------------------
 " Open ack
 nnoremap <leader>a :Ack!<space>
-
-"----------------------------------------------
-" Plugin: neomake/neomake
-"----------------------------------------------
-" Configure signs.
-let g:neomake_error_sign   = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
-let g:neomake_warning_sign = {'text': '∆', 'texthl': 'NeomakeWarningSign'}
-let g:neomake_message_sign = {'text': '➤', 'texthl': 'NeomakeMessageSign'}
-let g:neomake_info_sign    = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
-
-"----------------------------------------------
-" Plugin: scrooloose/nerdtree
-"----------------------------------------------
-nnoremap <leader>d :NERDTreeToggle<cr>
-nnoremap <F2> :NERDTreeToggle<cr>
-
-" Files to ignore
-let NERDTreeIgnore = [
-    \ '\~$',
-    \ '\.pyc$',
-    \ '^\.DS_Store$',
-    \ '^node_modules$',
-    \ '^.ropeproject$',
-    \ '^__pycache__$'
-\]
-
-" Close vim if NERDTree is the only opened window.
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-
-" Show hidden files by default.
-let NERDTreeShowHidden = 1
-
-" Allow NERDTree to change session root.
-let g:NERDTreeChDirMode = 2
 
 "----------------------------------------------
 " Plugin: sebdah/vim-delve
@@ -430,50 +305,10 @@ let g:NERDTreeChDirMode = 2
 let g:delve_backend = "native"
 
 "----------------------------------------------
-" Plugin: Shougo/neosnippet
-"----------------------------------------------
-" Disable the default snippets (needed since we do not install
-" Shougo/neosnippet-snippets).
-"
-" Below you can disable default snippets for specific languages. If you set the
-" language to _ it sets the default for all languages.
-let g:neosnippet#disable_runtime_snippets = {
-    \ 'go': 1
-\}
-
-" Keybindings
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
-
-" Set the path to our snippets
-let g:neosnippet#snippets_directory='~/.config/nvim/snippets'
-
-"----------------------------------------------
-" Plugin: vimwiki/vimwiki
-"----------------------------------------------
-" Path to wiki
-let g:vimwiki_list = [{
-        \ 'path': '~/Dropbox/vimwiki',
-        \ 'syntax': 'markdown',
-        \ 'ext': '.vimwiki.markdown'}]
-
-au FileType vimwiki set expandtab
-au FileType vimwiki set shiftwidth=2
-au FileType vimwiki set softtabstop=2
-au FileType vimwiki set tabstop=2
-
-"----------------------------------------------
 " Plugin: 'terryma/vim-multiple-cursors'
 "----------------------------------------------
 let g:multi_cursor_next_key='<C-n>'
 let g:multi_cursor_skip_key='<C-b>'
-
-"----------------------------------------------
-" Plugin: zchee/deoplete-go
-"----------------------------------------------
-" Enable completing of go pointers
-let g:deoplete#sources#go#pointer = 1
 
 "----------------------------------------------
 " Language: Golang
@@ -484,7 +319,6 @@ au FileType go set softtabstop=4
 au FileType go set tabstop=4
 
 " Mappings
-au FileType go nmap <F8> :GoMetaLinter<cr>
 au FileType go nmap <F9> :GoCoverageToggle -short<cr>
 au FileType go nmap <F10> :GoTest -short<cr>
 au FileType go nmap <F12> <Plug>(go-def)
@@ -503,7 +337,11 @@ au FileType go nmap <leader>gDv <Plug>(go-doc-vertical)
 let g:go_fmt_command = "goimports"
 
 " Set neosnippet as snippet engine
-let g:go_snippet_engine = "neosnippet"
+let g:go_snippet_engine = "ultisnips"
+
+" Enable jump to defenition
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
 
 " Enable syntax highlighting per default
 let g:go_highlight_types = 1
@@ -530,68 +368,29 @@ let g:go_list_type = "quickfix"
 " Add the failing test name to the output of :GoTest
 let g:go_test_show_name = 1
 
-" gometalinter configuration
-let g:go_metalinter_command = ""
-let g:go_metalinter_deadline = "5s"
-let g:go_metalinter_enabled = [
-    \ 'deadcode',
-    \ 'golint',
-    \ 'gosimple',
-    \ 'vet',
-    \ 'vetshadow',
-    \ 'misspell'
-\]
-let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'misspell']
-
 " Set whether the JSON tags should be snakecase or camelcase.
 let g:go_addtags_transform = "snakecase"
 
-" neomake configuration for Go.
-let g:neomake_go_enabled_makers = [ 'go', 'gometalinter' ]
-let g:neomake_go_gometalinter_maker = {
-  \ 'args': [
-  \   '--tests',
-  \   '--enable-gc',
-  \   '--concurrency=3',
-  \   '--fast',
-  \   '-D', 'aligncheck',
-  \   '-D', 'dupl',
-  \   '-D', 'gocyclo',
-  \   '-D', 'gotype',
-  \   '-E', 'misspell',
-  \   '-E', 'unused',
-  \   '%:p:h',
-  \ ],
-  \ 'append_file': 0,
-  \ 'errorformat':
-  \   '%E%f:%l:%c:%trror: %m,' .
-  \   '%W%f:%l:%c:%tarning: %m,' .
-  \   '%E%f:%l::%trror: %m,' .
-  \   '%W%f:%l::%tarning: %m'
-  \ }
-
+"----------------------------------------------
 " ALE
+"----------------------------------------------
 let b:ale_fixers = {
 \ '*': ['remove_trailing_lines', 'trim_whitespace'],
 \ 'go': ['goimports'],
 \}
-let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=govet --enable=golint --enable=megacheck --enable=gosimple --enable=misspell'
+let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=govet --enable=golint --enable=staticcheck --enable=gosimple --enable=misspell'
+
 " Set this variable to 1 to fix files when you save them.
 let g:ale_fix_on_save = 1
+
 " Enable completion where available.
 let g:ale_completion_enabled = 1
 let g:ale_lint_on_text_changed = 'never'
 
-"*****************************************************************************
-"*****************************************************************************
+"----------------------------------------------
+" Lightline
+"----------------------------------------------
 
-"" Include user's local vim config
-if filereadable(expand("~/.config/nvim/local_init.vim"))
-  source ~/.config/nvim/local_init.vim
-endif
-
-" ==================== Lightline ====================
-"
 let g:lightline = {
       \ 'colorscheme': 'one',
       \ 'active': {
@@ -829,9 +628,6 @@ au FileType ruby set expandtab
 au FileType ruby set shiftwidth=2
 au FileType ruby set softtabstop=2
 au FileType ruby set tabstop=2
-
-" Enable neomake for linting.
-"au FileType ruby autocmd BufWritePost * Neomake
 
 "----------------------------------------------
 " Language: SQL
