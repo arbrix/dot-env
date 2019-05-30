@@ -2,4 +2,4 @@
 *vim/bundle
 .nvim/.init*
 gitconfig
-.DB_Store
+.DS_Store

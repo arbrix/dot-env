@@ -5,9 +5,10 @@
 " instructions:
 " https://github.com/junegunn/vim-plug
 "----------------------------------------------
-call plug#begin(expand('~/.vim/plugged'))
+call plug#begin('~/.vim/plugged')
 " UI
 Plug 'itchyny/lightline.vim'
+Plug 'maximbaz/lightline-ale'
 Plug 'godlygeek/tabular'
 
 " Misc
@@ -37,6 +38,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'honza/vim-snippets'
 Plug 'Townk/vim-autoclose'
+Plug 'buoto/gotests-vim'
 Plug 'tomtom/tcomment_vim'
 
 " Git support
@@ -47,13 +49,10 @@ Plug 'tpope/vim-fugitive'
 " Color themes
 Plug 'rakr/vim-one'
 Plug 'altercation/vim-colors-solarized'
-Plug 'fatih/molokai'
-Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
 
 " Unite
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-
 call plug#end()
 
 "----------------------------------------------
@@ -89,6 +88,7 @@ set title                         " let vim set the terminal title
 set updatetime=100                " redraw the status bar often
 set visualbell                    " Flash screen instead of beep sound
 set fileencoding=utf-8            " Set the encoding of files written
+set wrap linebreak nolist
 
 " Allow backspace to delete indentation and inserted text
 " i.e. how it works in most programs
@@ -104,8 +104,9 @@ if has('nvim')
     " install the neovim package for these binaries separately like this for
     " example:
     " pip3.6 install -U neovim
-    let g:python_host_prog = '/usr/bin/python'
+    let g:python_host_prog  = '/usr/local/bin/python'
     let g:python3_host_prog = '/usr/local/bin/python3'
+    let g:loaded_python_provider = 1
 endif
 
 " Enable mouse if possible
@@ -305,6 +306,12 @@ nnoremap <leader>a :Ack!<space>
 let g:delve_backend = "native"
 
 "----------------------------------------------
+" Plugin: 'terryma/vim-multiple-cursors'
+"----------------------------------------------
+let g:multi_cursor_next_key='<C-n>'
+let g:multi_cursor_skip_key='<C-b>'
+
+"----------------------------------------------
 " Language: Golang
 "----------------------------------------------
 au FileType go set noexpandtab
@@ -326,6 +333,8 @@ au FileType go nmap <leader>gdv <Plug>(go-def-vertical)
 au FileType go nmap <leader>gdh <Plug>(go-def-split)
 au FileType go nmap <leader>gD <Plug>(go-doc)
 au FileType go nmap <leader>gDv <Plug>(go-doc-vertical)
+
+let g:deoplete#enable_at_startup = 1 " ignored by vim because deoplete not installed there
 
 " Run goimports when running gofmt
 let g:go_fmt_command = "goimports"
@@ -368,15 +377,22 @@ let g:go_addtags_transform = "snakecase"
 "----------------------------------------------
 " ALE
 "----------------------------------------------
-
 let b:ale_fixers = {
 \ '*': ['remove_trailing_lines', 'trim_whitespace'],
 \ 'go': ['goimports'],
 \}
-let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=govet --enable=golint --enable=staticcheck --enable=gosimple --enable=misspell'
 
+let g:ale_linters = {
+\   'go': ['golangci-lint'],
+\}
+
+let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=golint --enable=megacheck --enable=gosimple --enable=misspell'
 " Set this variable to 1 to fix files when you save them.
 let g:ale_fix_on_save = 1
+
+" Error and warning signs.
+let g:ale_sign_error = '✖'
+let g:ale_sign_warning = '⚠'
 
 " Enable completion where available.
 let g:ale_completion_enabled = 1
@@ -385,6 +401,25 @@ let g:ale_lint_on_text_changed = 'never'
 "----------------------------------------------
 " Lightline
 "----------------------------------------------
+let g:lightline = {}
+
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
+let g:lightline.component_type = {
+      \     'linter_checking': 'left',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'left',
+      \ }
+
+let g:lightline#ale#indicator_warnings = '⚠'
+let g:lightline#ale#indicator_errors = '✖'
+
+>>>>>>> bd503a447f0cc909d33cc99a736b48cbd5201d4e
 
 let g:lightline = {
       \ 'colorscheme': 'one',
@@ -393,7 +428,8 @@ let g:lightline = {
       \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark', 'go'] ],
       \   'right': [ [ 'lineinfo' ],
       \              [ 'percent' ],
-      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \              [ 'fileformat', 'fileencoding', 'filetype' ],
+      \              [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ] ],
       \ },
       \ 'component': {
       \   'go': '%#goStatuslineColor#%{LightLineGo()}',
@@ -487,6 +523,58 @@ function! CtrlPMark()
     return ''
   endif
 endfunction
+
+"----------------------------------------------
+" Plugin: mileszs/ack.vim
+"----------------------------------------------
+" Open ack
+nnoremap <leader>a :Ack!<space>
+
+"----------------------------------------------
+" Plugin: neomake/neomake
+"----------------------------------------------
+" Configure signs.
+let g:neomake_error_sign   = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_warning_sign = {'text': '∆', 'texthl': 'NeomakeWarningSign'}
+let g:neomake_message_sign = {'text': '➤', 'texthl': 'NeomakeMessageSign'}
+let g:neomake_info_sign    = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
+
+" ==================== UltiSnips ====================
+function! g:UltiSnips_Complete()
+  call UltiSnips#ExpandSnippet()
+  if g:ulti_expand_res == 0
+    if pumvisible()
+      return "\<C-n>"
+    else
+      call UltiSnips#JumpForwards()
+      if g:ulti_jump_forwards_res == 0
+        return "\<TAB>"
+      endif
+    endif
+  endif
+  return ""
+endfunction
+
+function! g:UltiSnips_Reverse()
+  call UltiSnips#JumpBackwards()
+  if g:ulti_jump_backwards_res == 0
+    return "\<C-P>"
+  endif
+
+  return ""
+endfunction
+
+
+if !exists("g:UltiSnipsJumpForwardTrigger")
+  let g:UltiSnipsJumpForwardTrigger = "<tab>"
+endif
+
+if !exists("g:UltiSnipsJumpBackwardTrigger")
+  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+endif
+
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
 "----------------------------------------------
 " Language: apiblueprint
