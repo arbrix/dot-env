@@ -50,6 +50,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'rakr/vim-one'
 Plug 'altercation/vim-colors-solarized'
 Plug 'morhetz/gruvbox'
+Plug 'lifepillar/vim-solarized8'
 
 " Unite
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
@@ -135,8 +136,9 @@ nnoremap <space> zz
 "----------------------------------------------
 " Colors
 "----------------------------------------------
+set t_Co=256
 set background=dark
-colorscheme gruvbox
+colorscheme solarized8_high
 
 " Override the search highlight color with a combination that is easier to
 " read. The default PaperColor is dark green backgroun with black foreground.
