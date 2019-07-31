@@ -24,6 +24,7 @@ Plug 'fatih/vim-hclfmt'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'godoctor/godoctor.vim', {'for': 'go'} " Gocode refactoring tool
 Plug 'w0rp/ale'
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 
 " Text editing
 Plug 'Raimondi/delimitMate'
@@ -48,9 +49,8 @@ Plug 'tpope/vim-fugitive'
 
 " Color themes
 Plug 'rakr/vim-one'
-Plug 'altercation/vim-colors-solarized'
-Plug 'morhetz/gruvbox'
 Plug 'lifepillar/vim-solarized8'
+Plug 'morhetz/gruvbox'
 
 " Unite
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
@@ -64,7 +64,6 @@ set smartindent                   " enable smart indentation
 set autoread                      " reload file if the file changes on the disk
 set autowrite                     " write when switching buffers
 set autowriteall                  " write on :quit
-set clipboard=unnamedplus
 set colorcolumn=81                " highlight the 80th column as an indicator
 set completeopt-=preview          " remove the horrendous preview window
 set cursorline                    " highlight the current line for the cursor
@@ -90,6 +89,12 @@ set updatetime=100                " redraw the status bar often
 set visualbell                    " Flash screen instead of beep sound
 set fileencoding=utf-8            " Set the encoding of files written
 set wrap linebreak nolist
+
+if system('uname -s') == "Darwin\n"
+  set clipboard=unnamed "OSX
+else
+  set clipboard=unnamedplus "Linux
+endif
 
 " Allow backspace to delete indentation and inserted text
 " i.e. how it works in most programs

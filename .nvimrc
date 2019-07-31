@@ -24,6 +24,7 @@ Plug 'fatih/vim-hclfmt'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'godoctor/godoctor.vim', {'for': 'go'} " Gocode refactoring tool
 Plug 'w0rp/ale'
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 
 " Text editing
 Plug 'Raimondi/delimitMate'
