@@ -23,8 +23,10 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'fatih/vim-hclfmt'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'godoctor/godoctor.vim', {'for': 'go'} " Gocode refactoring tool
-Plug 'w0rp/ale'
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+Plug 'majutsushi/tagbar'
+Plug 'dense-analysis/ale'
+
 
 " Text editing
 Plug 'Raimondi/delimitMate'
@@ -340,6 +342,7 @@ au FileType go nmap <leader>gdv <Plug>(go-def-vertical)
 au FileType go nmap <leader>gdh <Plug>(go-def-split)
 au FileType go nmap <leader>gD <Plug>(go-doc)
 au FileType go nmap <leader>gDv <Plug>(go-doc-vertical)
+au filetype go inoremap <buffer> . .<C-x><C-o>
 
 let g:deoplete#enable_at_startup = 1 " ignored by vim because deoplete not installed there
 
@@ -390,10 +393,9 @@ let b:ale_fixers = {
 \}
 
 let g:ale_linters = {
-\   'go': ['golangci-lint'],
+\   'go': ['golint', 'go vet','gosimple', 'staticcheck'],
 \}
 
-let g:ale_go_golangci_lint_options = '--no-config --issues-exit-code=0 --deadline=5s --skip-dirs "(assets|tests|vendor) --skip-files  "_test.go" --disable-all --enable=golint --enable=megacheck --enable=gosimple --enable=misspell'
 " Set this variable to 1 to fix files when you save them.
 let g:ale_fix_on_save = 1
 
