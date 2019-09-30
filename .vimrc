@@ -67,7 +67,7 @@ set autoread                      " reload file if the file changes on the disk
 set autowrite                     " write when switching buffers
 set autowriteall                  " write on :quit
 set colorcolumn=81                " highlight the 80th column as an indicator
-set completeopt-=preview          " remove the horrendous preview window
+set completeopt=longest,menuone   " remove the horrendous preview window
 set cursorline                    " highlight the current line for the cursor
 set encoding=utf-8                " Change how vim represents characters on the screen
 set expandtab                     " expands tabs to spaces
