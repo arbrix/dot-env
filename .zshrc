@@ -47,6 +47,9 @@ export GOPATH=$HOME
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
+export GONOSUMDB=true
+export GOPROXY=direct
+export GOPRIVATE=git.msv.mckinsey.com
 
 # =============
 #    HISTORY
@@ -164,6 +167,11 @@ zstyle ':completion:*' list-dirs-first true
 # Use emacs-like key bindings by default:
 bindkey -e
 
+bindkey "[D" backward-word
+bindkey "[C" forward-word
+bindkey "^[a" beginning-of-line
+bindkey "^[e" end-of-line
+
 # [Ctrl-r] - Search backward incrementally for a specified string. The string
 # may begin with ^ to anchor the search to the beginning of the line.
 bindkey '^r' history-incremental-search-backward
@@ -228,7 +236,11 @@ if [ -f $(brew --prefix)/etc/brew-wrap ];then
 fi
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/ikut/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ikut/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/ivan_kutuzov/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ivan_kutuzov/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/ikut/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ikut/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/ivan_kutuzov/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ivan_kutuzov/google-cloud-sdk/completion.zsh.inc'; fi
+
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+

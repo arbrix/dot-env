@@ -1,5 +1,6 @@
 *vim/backup
 *vim/bundle
 .nvim/.init*
+.vscode
 gitconfig
 .DS_Store

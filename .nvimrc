@@ -15,19 +15,18 @@ Plug 'godlygeek/tabular'
 Plug 'ConradIrwin/vim-bracketed-paste' " enables transparent pasting into vim. (i.e. no more :set paste!)
 Plug 't9md/vim-choosewin' " Land on window you chose like tmux's 'display-pane'
 Plug 'mileszs/ack.vim'
-Plug 'ctrlpvim/ctrlp.vim'
 
 " Languages
 Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'fatih/vim-hclfmt'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
-Plug 'godoctor/godoctor.vim', {'for': 'go'} " Gocode refactoring tool
-Plug 'w0rp/ale'
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+Plug 'dense-analysis/ale'
+Plug 'majutsushi/tagbar'
+Plug 'autozimu/LanguageClient-neovim', {'branch': 'next','do': 'bash install.sh'}
 
 " Text editing
-Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
@@ -37,7 +36,6 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'SirVer/ultisnips'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'honza/vim-snippets'
 Plug 'Townk/vim-autoclose'
 Plug 'buoto/gotests-vim'
 Plug 'tomtom/tcomment_vim'
@@ -49,7 +47,7 @@ Plug 'tpope/vim-fugitive'
 
 " Color themes
 Plug 'rakr/vim-one'
-Plug 'altercation/vim-colors-solarized'
+Plug 'lifepillar/vim-solarized8'
 Plug 'morhetz/gruvbox'
 
 " Unite
@@ -245,15 +243,6 @@ nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
 
 "----------------------------------------------
-" Plugin: 'ctrlpvim/ctrlp.vim'
-"----------------------------------------------
-" Note: We are not using CtrlP much in this configuration. But vim-go depend on
-" it to run GoDecls(Dir).
-
-" Disable the CtrlP mapping, since we want to use FZF instead for <c-p>.
-let g:ctrlp_map = ''
-
-"----------------------------------------------
 " Plugin: 'junegunn/fzf.vim'
 "----------------------------------------------
 nnoremap <c-p> :FZF<cr>
@@ -374,6 +363,92 @@ let g:go_test_show_name = 1
 
 " Set whether the JSON tags should be snakecase or camelcase.
 let g:go_addtags_transform = "snakecase"
+
+" disable vim-go :GoDef short cut (gd)
+" this is handled by LanguageClient [LC]
+let g:go_def_mapping_enabled = 0
+
+" ------------------------------------------------------------------------------
+" Plugin: LanguageClient-neovim
+" ------------------------------------------------------------------------------
+
+" if hidden is not set, TextEdit might fail.
+set hidden
+
+let g:LanguageClient_serverCommands = {
+    \ 'go': ['go-langserver'],
+    \ }
+
+let g:LanguageClient_autoStart = 1
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" Or map each action separately
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> gr:call LanguageClient#textDocument_references()<CR>
+" Rename - rn => rename
+noremap <leader>rn :call LanguageClient#textDocument_rename()<CR>
+
+" Rename - rc => rename camelCase
+noremap <leader>rc :call LanguageClient#textDocument_rename(
+            \ {'newName': Abolish.camelcase(expand('<cword>'))})<CR>
+
+" Rename - rs => rename snake_case
+noremap <leader>rs :call LanguageClient#textDocument_rename(
+            \ {'newName': Abolish.snakecase(expand('<cword>'))})<CR>
+
+" Rename - ru => rename UPPERCASE
+noremap <leader>ru :call LanguageClient#textDocument_rename(
+            \ {'newName': Abolish.uppercase(expand('<cword>'))})<CR>
+<
+
+set completefunc=LanguageClient#complete
+
+set formatexpr=LanguageClient#textDocument_rangeFormatting_sinc()
+
+let g:LanguageClient_diagnosticsDisplay = 1
+
+let g:LanguageClient_changeThrottle = 0.5
+
+" Use <c-space> to trigger completion.
+" inoremap <silent><expr> <c-space> coc#refresh()
+"
+" " Use `[c` and `]c` to navigate diagnostics
+" nmap <silent> [c <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]c <Plug>(coc-diagnostic-next)
+"
+" " Remap keys for gotos
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
+"
+" " Use U to show documentation in preview window
+" nnoremap <silent> U :call <SID>show_documentation()<CR>
+"
+" " Remap for rename current word
+" nmap <leader>rn <Plug>(coc-rename)
+"
+" " Remap for format selected region
+" vmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
+" " Show all diagnostics
+" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" " Manage extensions
+" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" " Show commands
+" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" " Find symbol of current document
+" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" " Search workspace symbols
+" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" " Do default action for next item.
+" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" " Do default action for previous item.
+" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" " Resume latest coc list
+" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
 
 "----------------------------------------------
 " ALE

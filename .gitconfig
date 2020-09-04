@@ -51,6 +51,8 @@
   short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
   simple = log --pretty=format:\" * %s\"
   shortnocolor = log --pretty=format:\"%h %cr %cn %s\"
+	code-changes = "!git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10"
+  cc = "!git code-changes"
 
   # pull
   pl = pull                         # pull
@@ -136,7 +138,7 @@
   path = .gitconfig.user
 [user]
 	user = arbrix
-	name = Ivan Kutuzov 
+	name = Ivan Kutuzov
 	email = ikut@softserveinc.com
 
 [credential]
@@ -144,3 +146,6 @@
 [credential "https://github.com"]
 [http]
 	cookiefile = /Users/ikut/.gitcookies
+	sslverify = false
+[pull]
+	ff = only
