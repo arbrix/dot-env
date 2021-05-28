@@ -114,12 +114,7 @@ function parse_git_dirty() {
   else
     echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
   fi
-}
-
-# ===================
-#    AUTOCOMPLETION
-# ===================
-# enable completion
+} # =================== AUTOCOMPLETION =================== enable completion
 autoload -Uz compinit
 compinit
 
@@ -221,6 +216,9 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # brew install zsh-autosuggestions
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
+# brew install zsh-history-substring-search
+source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+
 # ===================
 #    THIRD PARTY
 # ===================
@@ -235,12 +233,27 @@ if [ -f $(brew --prefix)/etc/brew-wrap ];then
   source $(brew --prefix)/etc/brew-wrap
 fi
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/ivan_kutuzov/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ivan_kutuzov/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/ivan_kutuzov/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ivan_kutuzov/google-cloud-sdk/completion.zsh.inc'; fi
 
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
+# https://github.com/jesseduffield/lazygit#usage
+lg()
+{
+    export LAZYGIT_NEW_DIR_FILE=~/.lazygit/newdir
+
+    lazygit "$@"
+
+    if [ -f $LAZYGIT_NEW_DIR_FILE ]; then
+            cd "$(cat $LAZYGIT_NEW_DIR_FILE)"
+            rm -f $LAZYGIT_NEW_DIR_FILE > /dev/null
+    fi
+}
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+export PATH="~/Library/Python/3.8/bin:$PATH"
+alias lzd='lazydocker'
+alias lzd='lazydocker'
+export PATH="/usr/local/opt/mysql-client/bin:$PATH"
+export PATH="/usr/local/opt/libpq/bin:$PATH"
+export PATH="/usr/local/opt/icu4c/bin:$PATH"
+export PATH="/usr/local/opt/icu4c/sbin:$PATH"

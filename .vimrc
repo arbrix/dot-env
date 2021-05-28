@@ -24,8 +24,6 @@ Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 Plug 'majutsushi/tagbar'
 Plug 'dense-analysis/ale'
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
-
 
 " Text editing
 Plug 'tpope/vim-commentary'
@@ -34,7 +32,7 @@ Plug 'tpope/vim-repeat'
 Plug 'terryma/vim-multiple-cursors'
 
 " Completion
-Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'Townk/vim-autoclose'

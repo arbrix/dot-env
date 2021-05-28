@@ -119,6 +119,8 @@
   autocrlf = false
   editor = vim
   excludesfile = ~/.gitignore
+	pager = delta
+	line-numbers = true
 
 [advice]
   statusHints = false
@@ -136,16 +138,19 @@
 
 [include]
   path = .gitconfig.user
-[user]
-	user = arbrix
-	name = Ivan Kutuzov
-	email = ikut@softserveinc.com
+
+[delta]
+	plus-color = "#012800"
+	minus-color = "#340001"
+  syntax-theme = Monokai Extended
+
+[interactive]
+	diffFilter = delta --color-only
 
 [credential]
 	helper = store
 [credential "https://github.com"]
-[http]
-	cookiefile = /Users/ikut/.gitcookies
-	sslverify = false
 [pull]
 	ff = only
+[url "git@git.msv.mckinsey.com:"]
+	insteadOf = https://git.msv.mckinsey.com/
